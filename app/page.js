@@ -763,6 +763,18 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
     return <Dashboard />
   }
   
+  if (currentScreen === 'theory') {
+    return <TheoryScreen />
+  }
+
+  if (currentScreen === 'quiz') {
+    return <QuizScreen />
+  }
+
+  if (currentScreen === 'pbl-projects') {
+    return <PBLProjectsScreen />
+  }
+  
   if (currentScreen === 'case-training') {
     return <CaseTraining />
   }
