@@ -159,7 +159,7 @@ const CDTOnboarding = () => {
           </div>
 
           {/* Main Menu Options */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
             <div 
               onClick={() => setCurrentScreen('case-training')}
               className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all cursor-pointer border-2 border-transparent hover:border-blue-300"
@@ -169,6 +169,30 @@ const CDTOnboarding = () => {
               </div>
               <h3 className="text-xl font-bold text-gray-800 text-center mb-2">Case Træning</h3>
               <p className="text-gray-600 text-center text-sm">Øv dig på konkrete situationer med personlig feedback</p>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-gray-200 opacity-50">
+              <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <BookOpen className="w-8 h-8 text-indigo-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 text-center mb-2">Teori</h3>
+              <p className="text-gray-600 text-center text-sm">Kommer snart - Lær grundlæggende CDT principper</p>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-gray-200 opacity-50">
+              <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <MessageCircle className="w-8 h-8 text-pink-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 text-center mb-2">Quiz</h3>
+              <p className="text-gray-600 text-center text-sm">Kommer snart - Test din viden interaktivt</p>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-gray-200 opacity-50">
+              <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FileText className="w-8 h-8 text-teal-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 text-center mb-2">PBL Projekter</h3>
+              <p className="text-gray-600 text-center text-sm">Kommer snart - Problembaseret læring</p>
             </div>
 
             <div 
@@ -761,18 +785,6 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
   // Screen routing
   if (currentScreen === 'dashboard') {
     return <Dashboard />
-  }
-  
-  if (currentScreen === 'theory') {
-    return <TheoryScreen />
-  }
-
-  if (currentScreen === 'quiz') {
-    return <QuizScreen />
-  }
-
-  if (currentScreen === 'pbl-projects') {
-    return <PBLProjectsScreen />
   }
   
   if (currentScreen === 'case-training') {
