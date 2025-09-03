@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+'use client'
+import { useState } from 'react'
 import { ChevronRight, Heart, BookOpen, UserCheck, MessageCircle, History, Brain, FileText } from 'lucide-react';
 
 const CDTOnboarding = () => {
