@@ -610,7 +610,7 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl w-full">
+      <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-8 max-w-2xl w-full mx-4">
         <div className="flex items-center justify-between mb-8">
           {steps.map((step, index) => {
             const Icon = step.icon
