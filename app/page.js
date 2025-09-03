@@ -1,10 +1,9 @@
-'use client'
-import { useState } from 'react'
-import { ChevronRight, Heart, BookOpen, UserCheck, MessageCircle, History, Brain, FileText } from 'lucide-react'
+import React, { useState, useEffect } from 'react';
+import { ChevronRight, Heart, BookOpen, UserCheck, MessageCircle, History, Brain, FileText } from 'lucide-react';
 
 const CDTOnboarding = () => {
-  const [currentStep, setCurrentStep] = useState(0)
-  const [currentScreen, setCurrentScreen] = useState('onboarding')
+  const [currentStep, setCurrentStep] = useState(0);
+  const [currentScreen, setCurrentScreen] = useState('onboarding');
   const [userProfile, setUserProfile] = useState({
     name: '',
     role: '',
@@ -12,10 +11,10 @@ const CDTOnboarding = () => {
     informationDepth: '',
     completed: false,
     casesCompleted: 0
-  })
+  });
   
-  const [userHistory, setUserHistory] = useState([])
-  const [currentCase, setCurrentCase] = useState(null)
+  const [userHistory, setUserHistory] = useState([]);
+  const [currentCase, setCurrentCase] = useState(null);
   
   const sampleCases = [
     {
@@ -39,14 +38,14 @@ const CDTOnboarding = () => {
       category: "Aspergers", 
       difficulty: "Avanceret"
     }
-  ]
+  ];
 
   const steps = [
     { title: "Velkommen", icon: Heart },
     { title: "Navn", icon: MessageCircle },
     { title: "Din rolle", icon: UserCheck },
     { title: "Information", icon: BookOpen }
-  ]
+  ];
 
   const roles = [
     { 
@@ -69,56 +68,56 @@ const CDTOnboarding = () => {
       label: 'Specialist', 
       description: 'Jeg er psykolog, specialpædagog eller anden specialist inden for området' 
     }
-  ]
+  ];
 
   const informationDepth = [
     { value: 'brief', label: 'Kort og konkret', description: 'Giv mig de vigtigste pointer hurtigt' },
     { value: 'detailed', label: 'Uddybende forklaringer', description: 'Jeg vil gerne forstå baggrunden og detaljerne' }
-  ]
+  ];
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1)
+      setCurrentStep(currentStep + 1);
     } else {
-      setUserProfile(prev => ({...prev, completed: true}))
-      setCurrentScreen('dashboard')
+      setUserProfile(prev => ({...prev, completed: true}));
+      setCurrentScreen('dashboard');
     }
-  }
+  };
 
   const handleSelection = (field, value) => {
-    const updatedProfile = {...userProfile, [field]: value}
+    const updatedProfile = {...userProfile, [field]: value};
     
     if (field === 'role') {
       switch(value) {
         case 'parent':
-          updatedProfile.language = 'everyday'
-          break
+          updatedProfile.language = 'everyday';
+          break;
         case 'teacher':
-          updatedProfile.language = 'professional'
-          break
+          updatedProfile.language = 'professional';
+          break;
         case 'professional':
-          updatedProfile.language = 'everyday'
-          break
+          updatedProfile.language = 'everyday';
+          break;
         case 'specialist':
-          updatedProfile.language = 'clinical'
-          break
+          updatedProfile.language = 'clinical';
+          break;
         default:
-          updatedProfile.language = 'everyday'
+          updatedProfile.language = 'everyday';
       }
     }
     
-    setUserProfile(updatedProfile)
-  }
+    setUserProfile(updatedProfile);
+  };
 
   const startCase = (caseItem) => {
-    setCurrentCase(caseItem)
-    setCurrentScreen('case-evaluation')
-  }
+    setCurrentCase(caseItem);
+    setCurrentScreen('case-evaluation');
+  };
 
   const goToDashboard = () => {
-    setCurrentScreen('dashboard')
-    setCurrentCase(null)
-  }
+    setCurrentScreen('dashboard');
+    setCurrentCase(null);
+  };
 
   const addToHistory = (caseResult) => {
     const historyItem = {
@@ -128,18 +127,18 @@ const CDTOnboarding = () => {
       feedback: caseResult.feedback,
       timestamp: new Date().toISOString(),
       score: caseResult.score
-    }
+    };
     
-    setUserHistory(prev => [historyItem, ...prev])
+    setUserHistory(prev => [historyItem, ...prev]);
     setUserProfile(prev => ({
       ...prev,
       casesCompleted: prev.casesCompleted + 1
-    }))
-  }
+    }));
+  };
 
   // Dashboard Component
   const Dashboard = () => {
-    const recentHistory = userHistory.slice(0, 3)
+    const recentHistory = userHistory.slice(0, 3);
     
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
@@ -211,9 +210,9 @@ const CDTOnboarding = () => {
                 </div>
                 <button 
                   onClick={() => {
-                    setUserProfile({name: '', role: '', language: '', informationDepth: '', completed: false, casesCompleted: 0})
-                    setCurrentStep(0)
-                    setCurrentScreen('onboarding')
+                    setUserProfile({name: '', role: '', language: '', informationDepth: '', completed: false, casesCompleted: 0});
+                    setCurrentStep(0);
+                    setCurrentScreen('onboarding');
                   }}
                   className="w-full mt-4 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm"
                 >
@@ -249,66 +248,66 @@ const CDTOnboarding = () => {
           </div>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   // Case Evaluation Component
   const CaseEvaluation = () => {
-    const [step, setStep] = useState('reading')
-    const [userSolution, setUserSolution] = useState('')
-    const [feedback, setFeedback] = useState(null)
-    const [isAnalyzing, setIsAnalyzing] = useState(false)
+    const [step, setStep] = useState('reading');
+    const [userSolution, setUserSolution] = useState('');
+    const [feedback, setFeedback] = useState(null);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
 
     const generateFeedback = () => {
-      setIsAnalyzing(true)
+      setIsAnalyzing(true);
       
       setTimeout(() => {
-        const feedback = generateIntelligentFeedback(currentCase, userSolution, userProfile)
-        setFeedback(feedback)
-        setStep('feedback')
-        setIsAnalyzing(false)
-      }, 2000)
-    }
+        const feedback = generateIntelligentFeedback(currentCase, userSolution, userProfile);
+        setFeedback(feedback);
+        setStep('feedback');
+        setIsAnalyzing(false);
+      }, 2000);
+    };
 
     const generateIntelligentFeedback = (caseData, solution, profile) => {
-      const isParent = profile.role === 'parent'
-      const isProfessional = profile.role === 'professional'
-      const isSpecialist = profile.role === 'specialist'
+      const isParent = profile.role === 'parent';
+      const isProfessional = profile.role === 'professional';
+      const isSpecialist = profile.role === 'specialist';
 
-      let positiveElements = []
-      let improvements = []
-      let optimalSolution = ''
-      let score = 60
+      let positiveElements = [];
+      let improvements = [];
+      let optimalSolution = '';
+      let score = 60;
 
       if (solution.toLowerCase().includes('rolig') || solution.toLowerCase().includes('stille')) {
         if (isParent) {
-          positiveElements.push("Du tænker på at bevare roen - det er super vigtigt når børn er pressede!")
+          positiveElements.push("Du tænker på at bevare roen - det er super vigtigt når børn er pressede!");
         } else if (isProfessional) {
-          positiveElements.push("Dit fokus på at skabe et roligt miljø viser god forståelse - vigtig i dit fag!")
+          positiveElements.push("Dit fokus på at skabe et roligt miljø viser god forståelse - vigtig i dit fag!");
         } else if (isSpecialist) {
-          positiveElements.push("Din fokus på at skabe et roligt miljø viser god forståelse for barnets reguleringsudfordringer")
+          positiveElements.push("Din fokus på at skabe et roligt miljø viser god forståelse for barnets reguleringsudfordringer");
         }
-        score += 15
+        score += 15;
       }
 
       if (solution.toLowerCase().includes('pause') || solution.toLowerCase().includes('hvile')) {
         if (isParent) {
-          positiveElements.push("Pauser er guld værd! Du forstår at børn med ADHD har brug for at 'tanke op'")
+          positiveElements.push("Pauser er guld værd! Du forstår at børn med ADHD har brug for at 'tanke op'");
         } else if (isProfessional) {
-          positiveElements.push("Pauser i behandlingen - smart tilgang der hjælper barnet med at regulere sig")
+          positiveElements.push("Pauser i behandlingen - smart tilgang der hjælper barnet med at regulere sig");
         } else if (isSpecialist) {
-          positiveElements.push("Implementation af strukturerede pauser er evidensbaseret praksis for ADHD")
+          positiveElements.push("Implementation af strukturerede pauser er evidensbaseret praksis for ADHD");
         }
-        score += 15
+        score += 15;
       }
 
       if (!solution.toLowerCase().includes('lille') && !solution.toLowerCase().includes('kort')) {
         if (isParent) {
-          improvements.push("Tænk på at dele opgaver op i mindre bid - det gør det meget nemmere for Emma at overskue")
+          improvements.push("Tænk på at dele opgaver op i mindre bid - det gør det meget nemmere for Emma at overskue");
         } else if (isProfessional) {
-          improvements.push("Overvej at dele din behandling/service op i kortere sekvenser - børn med ADHD klarer det bedre")
+          improvements.push("Overvej at dele din behandling/service op i kortere sekvenser - børn med ADHD klarer det bedre");
         } else if (isSpecialist) {
-          improvements.push("Opgave-segmentering vil forbedre fokus og reducere kognitiv belastning")
+          improvements.push("Opgave-segmentering vil forbedre fokus og reducere kognitiv belastning");
         }
       }
 
@@ -321,7 +320,7 @@ const CDTOnboarding = () => {
 4. Bevægelsespauser: 2-3 minutters pause hver 15. minut
 5. Ros det der virker: Giv opmærksomhed når det går godt
 
-Dette virker fordi børn med ADHD har brug for struktur og korte intervaller.`
+Dette virker fordi børn med ADHD har brug for struktur og korte intervaller.`;
 
       } else if (isProfessional) {
         optimalSolution = `Som fagperson kan du hjælpe børn som Emma:
@@ -332,7 +331,7 @@ Dette virker fordi børn med ADHD har brug for struktur og korte intervaller.`
 4. Brug barnets interesser: Motivér med noget de kan lide
 5. Ros samarbejdet: Giv positive tilbagemeldinger
 
-Som frisør/tandlæge møder du måske kun barnet sjældent, men din forståelse gør en kæmpe forskel.`
+Som frisør/tandlæge møder du måske kun barnet sjældent, men din forståelse gør en kæmpe forskel.`;
 
       } else if (isSpecialist) {
         optimalSolution = `Evidensbaseret tilgang til Emmas udfordringer:
@@ -343,7 +342,7 @@ Som frisør/tandlæge møder du måske kun barnet sjældent, men din forståelse
 4. Kinæstetisk integration: Planlagte bevægelsespauser
 5. Positiv adfærdsforstærkning: Immediat anerkendelse
 
-ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller reducerer cognitive load.`
+ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller reducerer cognitive load.`;
       }
 
       return {
@@ -358,17 +357,17 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
           isSpecialist ?
           `${profile.name}, din professionelle tilgang er solid.` :
           `${profile.name}, tak for din interesse i at hjælpe børn.`
-      }
-    }
+      };
+    };
 
     const completeCase = () => {
       addToHistory({
         userSolution,
         feedback,
         score: feedback.score
-      })
-      goToDashboard()
-    }
+      });
+      goToDashboard();
+    };
 
     if (isAnalyzing) {
       return (
@@ -386,7 +385,7 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
             </div>
           </div>
         </div>
-      )
+      );
     }
 
     if (step === 'reading') {
@@ -447,7 +446,7 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
             </div>
           </div>
         </div>
-      )
+      );
     }
 
     if (step === 'solving') {
@@ -507,7 +506,7 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
             </div>
           </div>
         </div>
-      )
+      );
     }
 
     if (step === 'feedback') {
@@ -575,9 +574,9 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <button
                     onClick={() => {
-                      setStep('solving')
-                      setUserSolution('')
-                      setFeedback(null)
+                      setStep('solving');
+                      setUserSolution('');
+                      setFeedback(null);
                     }}
                     className="px-6 py-3 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-medium"
                   >
@@ -594,26 +593,26 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
             </div>
           </div>
         </div>
-      )
+      );
     }
 
-    return null
-  }
+    return null;
+  };
 
   if (currentScreen === 'dashboard') {
-    return <Dashboard />
+    return <Dashboard />;
   }
   
   if (currentScreen === 'case-evaluation') {
-    return <CaseEvaluation />
+    return <CaseEvaluation />;
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-8 max-w-2xl w-full mx-4">
+      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl w-full">
         <div className="flex items-center justify-between mb-8">
           {steps.map((step, index) => {
-            const Icon = step.icon
+            const Icon = step.icon;
             return (
               <div key={index} className="flex items-center">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
@@ -627,7 +626,7 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
                   }`} />
                 )}
               </div>
-            )
+            );
           })}
         </div>
 
@@ -746,9 +745,7 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default function Home() {
-  return <CDTOnboarding />
-}
+export default CDTOnboarding;
