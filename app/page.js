@@ -1,10 +1,10 @@
 'use client'
 import { useState } from 'react'
-import { ChevronRight, Heart, BookOpen, UserCheck, MessageCircle, History, Brain, FileText } from 'lucide-react';
+import { ChevronRight, Heart, BookOpen, UserCheck, MessageCircle, History, Brain, FileText, Users, Settings, ArrowLeft, Play, Video, Library } from 'lucide-react'
 
 const CDTOnboarding = () => {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [currentScreen, setCurrentScreen] = useState('onboarding');
+  const [currentStep, setCurrentStep] = useState(0)
+  const [currentScreen, setCurrentScreen] = useState('onboarding')
   const [userProfile, setUserProfile] = useState({
     name: '',
     role: '',
@@ -12,10 +12,10 @@ const CDTOnboarding = () => {
     informationDepth: '',
     completed: false,
     casesCompleted: 0
-  });
+  })
   
-  const [userHistory, setUserHistory] = useState([]);
-  const [currentCase, setCurrentCase] = useState(null);
+  const [userHistory, setUserHistory] = useState([])
+  const [currentCase, setCurrentCase] = useState(null)
   
   const sampleCases = [
     {
@@ -39,14 +39,14 @@ const CDTOnboarding = () => {
       category: "Aspergers", 
       difficulty: "Avanceret"
     }
-  ];
+  ]
 
   const steps = [
     { title: "Velkommen", icon: Heart },
     { title: "Navn", icon: MessageCircle },
     { title: "Din rolle", icon: UserCheck },
     { title: "Information", icon: BookOpen }
-  ];
+  ]
 
   const roles = [
     { 
@@ -69,56 +69,56 @@ const CDTOnboarding = () => {
       label: 'Specialist', 
       description: 'Jeg er psykolog, specialpædagog eller anden specialist inden for området' 
     }
-  ];
+  ]
 
   const informationDepth = [
     { value: 'brief', label: 'Kort og konkret', description: 'Giv mig de vigtigste pointer hurtigt' },
     { value: 'detailed', label: 'Uddybende forklaringer', description: 'Jeg vil gerne forstå baggrunden og detaljerne' }
-  ];
+  ]
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
+      setCurrentStep(currentStep + 1)
     } else {
-      setUserProfile(prev => ({...prev, completed: true}));
-      setCurrentScreen('dashboard');
+      setUserProfile(prev => ({...prev, completed: true}))
+      setCurrentScreen('dashboard')
     }
-  };
+  }
 
   const handleSelection = (field, value) => {
-    const updatedProfile = {...userProfile, [field]: value};
+    const updatedProfile = {...userProfile, [field]: value}
     
     if (field === 'role') {
       switch(value) {
         case 'parent':
-          updatedProfile.language = 'everyday';
-          break;
+          updatedProfile.language = 'everyday'
+          break
         case 'teacher':
-          updatedProfile.language = 'professional';
-          break;
+          updatedProfile.language = 'professional'
+          break
         case 'professional':
-          updatedProfile.language = 'everyday';
-          break;
+          updatedProfile.language = 'everyday'
+          break
         case 'specialist':
-          updatedProfile.language = 'clinical';
-          break;
+          updatedProfile.language = 'clinical'
+          break
         default:
-          updatedProfile.language = 'everyday';
+          updatedProfile.language = 'everyday'
       }
     }
     
-    setUserProfile(updatedProfile);
-  };
+    setUserProfile(updatedProfile)
+  }
 
   const startCase = (caseItem) => {
-    setCurrentCase(caseItem);
-    setCurrentScreen('case-evaluation');
-  };
+    setCurrentCase(caseItem)
+    setCurrentScreen('case-evaluation')
+  }
 
   const goToDashboard = () => {
-    setCurrentScreen('dashboard');
-    setCurrentCase(null);
-  };
+    setCurrentScreen('dashboard')
+    setCurrentCase(null)
+  }
 
   const addToHistory = (caseResult) => {
     const historyItem = {
@@ -128,22 +128,23 @@ const CDTOnboarding = () => {
       feedback: caseResult.feedback,
       timestamp: new Date().toISOString(),
       score: caseResult.score
-    };
+    }
     
-    setUserHistory(prev => [historyItem, ...prev]);
+    setUserHistory(prev => [historyItem, ...prev])
     setUserProfile(prev => ({
       ...prev,
       casesCompleted: prev.casesCompleted + 1
-    }));
-  };
+    }))
+  }
 
-  // Dashboard Component
+  // Enhanced Dashboard with Menu Options
   const Dashboard = () => {
-    const recentHistory = userHistory.slice(0, 3);
+    const recentHistory = userHistory.slice(0, 3)
     
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
         <div className="max-w-6xl mx-auto">
+          {/* Welcome Header */}
           <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
             <div className="flex items-center justify-between">
               <div>
@@ -157,158 +158,312 @@ const CDTOnboarding = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 space-y-6">
+          {/* Main Menu Options */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div 
+              onClick={() => setCurrentScreen('case-training')}
+              className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all cursor-pointer border-2 border-transparent hover:border-blue-300"
+            >
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Brain className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 text-center mb-2">Case Træning</h3>
+              <p className="text-gray-600 text-center text-sm">Øv dig på konkrete situationer med personlig feedback</p>
+            </div>
+
+            <div 
+              onClick={() => setCurrentScreen('roleplay')}
+              className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all cursor-pointer border-2 border-transparent hover:border-green-300"
+            >
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 h-8 text-green-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 text-center mb-2">Rollespil</h3>
+              <p className="text-gray-600 text-center text-sm">Interaktive dialoger og kommunikationstræning</p>
+            </div>
+
+            <div 
+              onClick={() => setCurrentScreen('specialist-tools')}
+              className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all cursor-pointer border-2 border-transparent hover:border-purple-300"
+            >
+              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Settings className="w-8 h-8 text-purple-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 text-center mb-2">Specialist Værktøjer</h3>
+              <p className="text-gray-600 text-center text-sm">Avancerede redskaber til professionelle</p>
+            </div>
+
+            <div 
+              onClick={() => setCurrentScreen('resources')}
+              className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all cursor-pointer border-2 border-transparent hover:border-orange-300"
+            >
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Library className="w-8 h-8 text-orange-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 text-center mb-2">Ressourcer</h3>
+              <p className="text-gray-600 text-center text-sm">Guides, artikler og best practices</p>
+            </div>
+          </div>
+
+          {/* User Profile & Recent Activity */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-white rounded-2xl shadow-lg p-6">
+              <h3 className="font-bold text-gray-800 mb-4 flex items-center">
+                <UserCheck className="w-5 h-5 mr-2 text-green-600" />
+                Din profil
+              </h3>
+              <div className="space-y-3 text-sm">
+                <div>
+                  <span className="text-gray-500">Rolle:</span>
+                  <div className="font-medium">{roles.find(r => r.value === userProfile.role)?.label}</div>
+                </div>
+                <div>
+                  <span className="text-gray-500">Info-dybde:</span>
+                  <div className="font-medium">{informationDepth.find(i => i.value === userProfile.informationDepth)?.label}</div>
+                </div>
+              </div>
+              <button 
+                onClick={() => {
+                  setUserProfile({name: '', role: '', language: '', informationDepth: '', completed: false, casesCompleted: 0})
+                  setCurrentStep(0)
+                  setCurrentScreen('onboarding')
+                }}
+                className="w-full mt-4 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm"
+              >
+                Rediger profil
+              </button>
+            </div>
+
+            {recentHistory.length > 0 && (
               <div className="bg-white rounded-2xl shadow-lg p-6">
-                <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                  <Brain className="w-6 h-6 mr-2 text-blue-600" />
-                  Nye Cases at øve på
-                </h2>
-                <div className="grid gap-4">
-                  {sampleCases.map((caseItem) => (
-                    <div key={caseItem.id} className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-colors">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-gray-800 mb-2">{caseItem.title}</h3>
-                          <p className="text-sm text-gray-600 mb-3">{caseItem.description}</p>
-                          <div className="flex items-center gap-3">
-                            <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded">
-                              {caseItem.category}
-                            </span>
-                            <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded">
-                              {caseItem.difficulty}
-                            </span>
-                          </div>
-                        </div>
-                        <button
-                          onClick={() => startCase(caseItem)}
-                          className="ml-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-                        >
-                          Start Case
-                        </button>
+                <h3 className="font-bold text-gray-800 mb-4 flex items-center">
+                  <History className="w-5 h-5 mr-2 text-purple-600" />
+                  Seneste aktivitet
+                </h3>
+                <div className="space-y-3">
+                  {recentHistory.map((item) => (
+                    <div key={item.id} className="border-l-4 border-blue-200 pl-3">
+                      <div className="font-medium text-sm text-gray-800">{item.case.title}</div>
+                      <div className="text-xs text-gray-500">
+                        {new Date(item.timestamp).toLocaleDateString('da-DK')}
                       </div>
+                      <div className="text-xs text-green-600 font-medium">Score: {item.score}/100</div>
                     </div>
                   ))}
                 </div>
+                {userHistory.length > 3 && (
+                  <button className="w-full mt-3 text-sm text-blue-600 hover:text-blue-800">
+                    Se alle ({userHistory.length})
+                  </button>
+                )}
               </div>
-            </div>
+            )}
+          </div>
+        </div>
+      </div>
+    )
+  }
 
-            <div className="space-y-6">
-              <div className="bg-white rounded-2xl shadow-lg p-6">
-                <h3 className="font-bold text-gray-800 mb-4 flex items-center">
-                  <UserCheck className="w-5 h-5 mr-2 text-green-600" />
-                  Din profil
-                </h3>
-                <div className="space-y-3 text-sm">
-                  <div>
-                    <span className="text-gray-500">Rolle:</span>
-                    <div className="font-medium">{roles.find(r => r.value === userProfile.role)?.label}</div>
-                  </div>
-                  <div>
-                    <span className="text-gray-500">Info-dybde:</span>
-                    <div className="font-medium">{informationDepth.find(i => i.value === userProfile.informationDepth)?.label}</div>
-                  </div>
-                </div>
-                <button 
-                  onClick={() => {
-                    setUserProfile({name: '', role: '', language: '', informationDepth: '', completed: false, casesCompleted: 0});
-                    setCurrentStep(0);
-                    setCurrentScreen('onboarding');
-                  }}
-                  className="w-full mt-4 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm"
-                >
-                  Rediger profil
-                </button>
-              </div>
-
-              {recentHistory.length > 0 && (
-                <div className="bg-white rounded-2xl shadow-lg p-6">
-                  <h3 className="font-bold text-gray-800 mb-4 flex items-center">
-                    <History className="w-5 h-5 mr-2 text-purple-600" />
-                    Seneste aktivitet
-                  </h3>
-                  <div className="space-y-3">
-                    {recentHistory.map((item) => (
-                      <div key={item.id} className="border-l-4 border-blue-200 pl-3">
-                        <div className="font-medium text-sm text-gray-800">{item.case.title}</div>
-                        <div className="text-xs text-gray-500">
-                          {new Date(item.timestamp).toLocaleDateString('da-DK')}
-                        </div>
-                        <div className="text-xs text-green-600 font-medium">Score: {item.score}/100</div>
+  // Case Training Screen
+  const CaseTraining = () => {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+        <div className="max-w-6xl mx-auto">
+          <button 
+            onClick={goToDashboard}
+            className="mb-6 flex items-center text-blue-600 hover:text-blue-800"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Tilbage til hovedmenu
+          </button>
+          
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+              <Brain className="w-6 h-6 mr-2 text-blue-600" />
+              Case Træning
+            </h2>
+            <p className="text-gray-600 mb-6">Vælg en case scenario at øve på. Du får personlig feedback baseret på din rolle som {roles.find(r => r.value === userProfile.role)?.label.toLowerCase()}.</p>
+            
+            <div className="grid gap-4">
+              {sampleCases.map((caseItem) => (
+                <div key={caseItem.id} className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-colors">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-gray-800 mb-2">{caseItem.title}</h3>
+                      <p className="text-sm text-gray-600 mb-3">{caseItem.description}</p>
+                      <div className="flex items-center gap-3">
+                        <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded">
+                          {caseItem.category}
+                        </span>
+                        <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded">
+                          {caseItem.difficulty}
+                        </span>
                       </div>
-                    ))}
-                  </div>
-                  {userHistory.length > 3 && (
-                    <button className="w-full mt-3 text-sm text-blue-600 hover:text-blue-800">
-                      Se alle ({userHistory.length})
+                    </div>
+                    <button
+                      onClick={() => startCase(caseItem)}
+                      className="ml-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium flex items-center"
+                    >
+                      <Play className="w-4 h-4 mr-2" />
+                      Start Case
                     </button>
-                  )}
+                  </div>
                 </div>
-              )}
+              ))}
             </div>
           </div>
         </div>
       </div>
-    );
-  };
+    )
+  }
 
-  // Case Evaluation Component
+  // Roleplay Screen
+  const RoleplayScreen = () => {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 p-4">
+        <div className="max-w-4xl mx-auto">
+          <button 
+            onClick={goToDashboard}
+            className="mb-6 flex items-center text-green-600 hover:text-green-800"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Tilbage til hovedmenu
+          </button>
+          
+          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+            <Users className="w-16 h-16 text-green-600 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">Rollespil Træning</h2>
+            <p className="text-gray-600 mb-6">
+              Øv kommunikation og håndtering af forskellige situationer gennem interaktive dialoger.
+            </p>
+            <div className="bg-green-50 rounded-lg p-6 mb-6">
+              <p className="text-green-700">
+                🚧 Denne funktion er under udvikling. Kommer snart med interaktive rollespil scenarier tilpasset din rolle som {roles.find(r => r.value === userProfile.role)?.label.toLowerCase()}.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Specialist Tools Screen
+  const SpecialistToolsScreen = () => {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 p-4">
+        <div className="max-w-4xl mx-auto">
+          <button 
+            onClick={goToDashboard}
+            className="mb-6 flex items-center text-purple-600 hover:text-purple-800"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Tilbage til hovedmenu
+          </button>
+          
+          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+            <Settings className="w-16 h-16 text-purple-600 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">Specialist Værktøjer</h2>
+            <p className="text-gray-600 mb-6">
+              Avancerede redskaber til professionelle inden for specialpædagogik.
+            </p>
+            <div className="bg-purple-50 rounded-lg p-6 mb-6">
+              <p className="text-purple-700">
+                🔧 Værktøjer under udvikling inkluderer: Observationsskemaer, vurderingsguides, IEP templates, og kommunikationshjælpemidler.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Resources Screen
+  const ResourcesScreen = () => {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-100 p-4">
+        <div className="max-w-4xl mx-auto">
+          <button 
+            onClick={goToDashboard}
+            className="mb-6 flex items-center text-orange-600 hover:text-orange-800"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Tilbage til hovedmenu
+          </button>
+          
+          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+            <Library className="w-16 h-16 text-orange-600 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">Ressource Bibliotek</h2>
+            <p className="text-gray-600 mb-6">
+              Adgang til guides, artikler, forskning og best practices inden for CDT og specialpædagogik.
+            </p>
+            <div className="bg-orange-50 rounded-lg p-6 mb-6">
+              <p className="text-orange-700">
+                📚 Kommer snart: Omfattende bibliotek med artikler, videoer, case studies og forskningsbaseret indhold tilpasset din rolle.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Case Evaluation Component (keeping existing functionality)
   const CaseEvaluation = () => {
-    const [step, setStep] = useState('reading');
-    const [userSolution, setUserSolution] = useState('');
-    const [feedback, setFeedback] = useState(null);
-    const [isAnalyzing, setIsAnalyzing] = useState(false);
+    const [step, setStep] = useState('reading')
+    const [userSolution, setUserSolution] = useState('')
+    const [feedback, setFeedback] = useState(null)
+    const [isAnalyzing, setIsAnalyzing] = useState(false)
 
     const generateFeedback = () => {
-      setIsAnalyzing(true);
+      setIsAnalyzing(true)
       
       setTimeout(() => {
-        const feedback = generateIntelligentFeedback(currentCase, userSolution, userProfile);
-        setFeedback(feedback);
-        setStep('feedback');
-        setIsAnalyzing(false);
-      }, 2000);
-    };
+        const feedback = generateIntelligentFeedback(currentCase, userSolution, userProfile)
+        setFeedback(feedback)
+        setStep('feedback')
+        setIsAnalyzing(false)
+      }, 2000)
+    }
 
     const generateIntelligentFeedback = (caseData, solution, profile) => {
-      const isParent = profile.role === 'parent';
-      const isProfessional = profile.role === 'professional';
-      const isSpecialist = profile.role === 'specialist';
+      const isParent = profile.role === 'parent'
+      const isProfessional = profile.role === 'professional'
+      const isSpecialist = profile.role === 'specialist'
 
-      let positiveElements = [];
-      let improvements = [];
-      let optimalSolution = '';
-      let score = 60;
+      let positiveElements = []
+      let improvements = []
+      let optimalSolution = ''
+      let score = 60
 
       if (solution.toLowerCase().includes('rolig') || solution.toLowerCase().includes('stille')) {
         if (isParent) {
-          positiveElements.push("Du tænker på at bevare roen - det er super vigtigt når børn er pressede!");
+          positiveElements.push("Du tænker på at bevare roen - det er super vigtigt når børn er pressede!")
         } else if (isProfessional) {
-          positiveElements.push("Dit fokus på at skabe et roligt miljø viser god forståelse - vigtig i dit fag!");
+          positiveElements.push("Dit fokus på at skabe et roligt miljø viser god forståelse - vigtig i dit fag!")
         } else if (isSpecialist) {
-          positiveElements.push("Din fokus på at skabe et roligt miljø viser god forståelse for barnets reguleringsudfordringer");
+          positiveElements.push("Din fokus på at skabe et roligt miljø viser god forståelse for barnets reguleringsudfordringer")
         }
-        score += 15;
+        score += 15
       }
 
       if (solution.toLowerCase().includes('pause') || solution.toLowerCase().includes('hvile')) {
         if (isParent) {
-          positiveElements.push("Pauser er guld værd! Du forstår at børn med ADHD har brug for at 'tanke op'");
+          positiveElements.push("Pauser er guld værd! Du forstår at børn med ADHD har brug for at 'tanke op'")
         } else if (isProfessional) {
-          positiveElements.push("Pauser i behandlingen - smart tilgang der hjælper barnet med at regulere sig");
+          positiveElements.push("Pauser i behandlingen - smart tilgang der hjælper barnet med at regulere sig")
         } else if (isSpecialist) {
-          positiveElements.push("Implementation af strukturerede pauser er evidensbaseret praksis for ADHD");
+          positiveElements.push("Implementation af strukturerede pauser er evidensbaseret praksis for ADHD")
         }
-        score += 15;
+        score += 15
       }
 
       if (!solution.toLowerCase().includes('lille') && !solution.toLowerCase().includes('kort')) {
         if (isParent) {
-          improvements.push("Tænk på at dele opgaver op i mindre bid - det gør det meget nemmere for Emma at overskue");
+          improvements.push("Tænk på at dele opgaver op i mindre bid - det gør det meget nemmere for Emma at overskue")
         } else if (isProfessional) {
-          improvements.push("Overvej at dele din behandling/service op i kortere sekvenser - børn med ADHD klarer det bedre");
+          improvements.push("Overvej at dele din behandling/service op i kortere sekvenser - børn med ADHD klarer det bedre")
         } else if (isSpecialist) {
-          improvements.push("Opgave-segmentering vil forbedre fokus og reducere kognitiv belastning");
+          improvements.push("Opgave-segmentering vil forbedre fokus og reducere kognitiv belastning")
         }
       }
 
@@ -321,7 +476,7 @@ const CDTOnboarding = () => {
 4. Bevægelsespauser: 2-3 minutters pause hver 15. minut
 5. Ros det der virker: Giv opmærksomhed når det går godt
 
-Dette virker fordi børn med ADHD har brug for struktur og korte intervaller.`;
+Dette virker fordi børn med ADHD har brug for struktur og korte intervaller.`
 
       } else if (isProfessional) {
         optimalSolution = `Som fagperson kan du hjælpe børn som Emma:
@@ -332,7 +487,7 @@ Dette virker fordi børn med ADHD har brug for struktur og korte intervaller.`;
 4. Brug barnets interesser: Motivér med noget de kan lide
 5. Ros samarbejdet: Giv positive tilbagemeldinger
 
-Som frisør/tandlæge møder du måske kun barnet sjældent, men din forståelse gør en kæmpe forskel.`;
+Som frisør/tandlæge møder du måske kun barnet sjældent, men din forståelse gør en kæmpe forskel.`
 
       } else if (isSpecialist) {
         optimalSolution = `Evidensbaseret tilgang til Emmas udfordringer:
@@ -343,7 +498,7 @@ Som frisør/tandlæge møder du måske kun barnet sjældent, men din forståelse
 4. Kinæstetisk integration: Planlagte bevægelsespauser
 5. Positiv adfærdsforstærkning: Immediat anerkendelse
 
-ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller reducerer cognitive load.`;
+ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller reducerer cognitive load.`
       }
 
       return {
@@ -358,17 +513,17 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
           isSpecialist ?
           `${profile.name}, din professionelle tilgang er solid.` :
           `${profile.name}, tak for din interesse i at hjælpe børn.`
-      };
-    };
+      }
+    }
 
     const completeCase = () => {
       addToHistory({
         userSolution,
         feedback,
         score: feedback.score
-      });
-      goToDashboard();
-    };
+      })
+      setCurrentScreen('case-training')
+    }
 
     if (isAnalyzing) {
       return (
@@ -386,7 +541,7 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
             </div>
           </div>
         </div>
-      );
+      )
     }
 
     if (step === 'reading') {
@@ -394,10 +549,11 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
           <div className="max-w-4xl mx-auto">
             <button 
-              onClick={goToDashboard}
+              onClick={() => setCurrentScreen('case-training')}
               className="mb-6 flex items-center text-blue-600 hover:text-blue-800"
             >
-              ← Tilbage til dashboard
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Tilbage til case oversigt
             </button>
             
             <div className="bg-white rounded-2xl shadow-lg p-8">
@@ -447,7 +603,7 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
             </div>
           </div>
         </div>
-      );
+      )
     }
 
     if (step === 'solving') {
@@ -455,10 +611,11 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
           <div className="max-w-4xl mx-auto">
             <button 
-              onClick={goToDashboard}
+              onClick={() => setCurrentScreen('case-training')}
               className="mb-6 flex items-center text-blue-600 hover:text-blue-800"
             >
-              ← Tilbage til dashboard
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Tilbage til case oversigt
             </button>
 
             <div className="bg-white rounded-2xl shadow-lg p-8">
@@ -507,7 +664,7 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
             </div>
           </div>
         </div>
-      );
+      )
     }
 
     if (step === 'feedback') {
@@ -515,10 +672,11 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
           <div className="max-w-4xl mx-auto">
             <button 
-              onClick={goToDashboard}
+              onClick={() => setCurrentScreen('case-training')}
               className="mb-6 flex items-center text-blue-600 hover:text-blue-800"
             >
-              ← Tilbage til dashboard
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Tilbage til case oversigt
             </button>
 
             <div className="space-y-6">
@@ -575,9 +733,9 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <button
                     onClick={() => {
-                      setStep('solving');
-                      setUserSolution('');
-                      setFeedback(null);
+                      setStep('solving')
+                      setUserSolution('')
+                      setFeedback(null)
                     }}
                     className="px-6 py-3 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-medium"
                   >
@@ -594,26 +752,44 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
             </div>
           </div>
         </div>
-      );
+      )
     }
 
-    return null;
-  };
+    return null
+  }
 
+  // Screen routing
   if (currentScreen === 'dashboard') {
-    return <Dashboard />;
+    return <Dashboard />
+  }
+  
+  if (currentScreen === 'case-training') {
+    return <CaseTraining />
+  }
+
+  if (currentScreen === 'roleplay') {
+    return <RoleplayScreen />
+  }
+
+  if (currentScreen === 'specialist-tools') {
+    return <SpecialistToolsScreen />
+  }
+
+  if (currentScreen === 'resources') {
+    return <ResourcesScreen />
   }
   
   if (currentScreen === 'case-evaluation') {
-    return <CaseEvaluation />;
+    return <CaseEvaluation />
   }
 
+  // Onboarding flow
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl w-full">
+      <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-8 max-w-2xl w-full mx-4">
         <div className="flex items-center justify-between mb-8">
           {steps.map((step, index) => {
-            const Icon = step.icon;
+            const Icon = step.icon
             return (
               <div key={index} className="flex items-center">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
@@ -627,7 +803,7 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
                   }`} />
                 )}
               </div>
-            );
+            )
           })}
         </div>
 
@@ -746,7 +922,9 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CDTOnboarding;
+export default function Home() {
+  return <CDTOnboarding />
+}
