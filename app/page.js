@@ -658,7 +658,7 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
                   value={userSolution}
                   onChange={(e) => setUserSolution(e.target.value)}
                   placeholder="Beskriv din løsning med dine egne ord..."
-                  className="w-full h-48 p-4 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none resize-none text-lg"
+                  className="w-full h-48 p-4 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none resize-none text-lg text-gray-800 placeholder-gray-500"
                 />
                 <div className="text-right text-sm text-gray-500 mt-2">
                   {userSolution.length} tegn
@@ -855,7 +855,7 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
                 placeholder="Indtast dit navn..."
                 value={userProfile.name}
                 onChange={(e) => handleSelection('name', e.target.value)}
-                className="w-full p-4 border-2 border-gray-200 rounded-lg text-lg focus:border-blue-500 focus:outline-none"
+                className="w-full p-4 border-2 border-gray-200 rounded-lg text-lg focus:border-blue-500 focus:outline-none text-gray-800 placeholder-gray-500"
               />
             </div>
           )}
@@ -940,7 +940,7 @@ ADHD påvirker eksekutive funktioner og sustained attention. Korte intervaller r
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >
-            {currentStep === steps.length - 1 ? 'Afslut' : 'Næste'}
+            {currentStep === steps.length - 1 ? 'Start CDT' : 'Næste'}
             <ChevronRight className="w-4 h-4 ml-2" />
           </button>
         </div>
