@@ -1,4 +1,3 @@
-import { ChevronRight, Heart, BookOpen, UserCheck, MessageCircle, History, Brain, FileText, Users, Settings, ArrowLeft, Play, Video, Library } from 'lucide-react';
 export default function Home() {
   return (
     <main>
