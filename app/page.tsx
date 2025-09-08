@@ -1,6 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import {
+  Heart,
+  MessageCircle,
+  UserCheck,
+  BookOpen
+} from 'lucide-react';
 
 export default function Home() {
   const [currentStep, setCurrentStep] = useState(0);
