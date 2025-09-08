@@ -3,9 +3,21 @@
 import { useState } from 'react';
 
 export default function Home() {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [currentScreen, setCurrentScreen] = useState('onboarding');
+  const [userProfile, setUserProfile] = useState({
+    name: '',
+    role: '',
+    language: '',
+    informationDepth: '',
+    completed: false,
+    casesCompleted: 0,
+  });
+
   return (
     <main>
       <h1>Velkommen til CDT Platform</h1>
+      <p>Trin: {currentStep}</p>
     </main>
   );
 }
