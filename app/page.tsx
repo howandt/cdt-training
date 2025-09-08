@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import TrialTimer from "../components/TrialTimer";
+import { TrialTimer } from "../components/TrialTimer";
 
 import {
   ChevronRight, Heart, BookOpen, UserCheck, MessageCircle,
