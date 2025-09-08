@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { ChevronRight, Heart, BookOpen, UserCheck, MessageCircle, History, Brain, FileText, Users, Settings, ArrowLeft, Play, Video, Library } from 'lucide-react'
 
 const CDTOnboarding = () => {
@@ -150,6 +151,7 @@ const CDTOnboarding = () => {
               <div>
                 <h1 className="text-3xl font-bold text-gray-800">Velkommen tilbage, {userProfile.name}!</h1>
                 <p className="text-gray-600 mt-2">Jeg er Heidi, din CDT specialist. Hvad skal vi arbejde med i dag?</p>
+
               </div>
               <div className="text-right">
                 <div className="text-sm text-gray-500">Cases gennemført</div>
