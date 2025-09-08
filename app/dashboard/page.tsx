@@ -1,3 +1,5 @@
+'use client';
+import { useRouter, useSearchParams } from 'next/navigation';
 export default function DashboardPage() {
   const searchParams = useSearchParams();
   const isTrial = searchParams?.get("trial") === "true";
