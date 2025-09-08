@@ -1,7 +1,15 @@
-'use client'
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { ChevronRight, Heart, BookOpen, UserCheck, MessageCircle, History, Brain, FileText, Users, Settings, ArrowLeft, Play, Video, Library } from 'lucide-react'
+'use client';
+
+import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import TrialTimer from '@/components/TrialTimer';
+
+import {
+  ChevronRight, Heart, BookOpen, UserCheck, MessageCircle,
+  History, Brain, FileText, Users, Settings, ArrowLeft,
+  Play, Video, Library
+} from 'lucide-react';
+
 
 const CDTOnboarding = () => {
   const [currentStep, setCurrentStep] = useState(0)
