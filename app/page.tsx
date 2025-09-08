@@ -5,7 +5,8 @@ import {
   Heart,
   MessageCircle,
   UserCheck,
-  BookOpen
+  BookOpen,
+  Brain
 } from 'lucide-react';
 
 export default function Home() {
