@@ -1,5 +1,9 @@
 'use client';
+
+import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { TrialTimer } from '../components/TrialTimer';
+
 export default function DashboardPage() {
   const searchParams = useSearchParams();
   const isTrial = searchParams?.get("trial") === "true";
