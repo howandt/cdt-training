@@ -1,1 +1,2 @@
-import TrialTimer from "../components/TrialTimer";
+import { TrialTimer } from "../components/TrialTimer";
+
