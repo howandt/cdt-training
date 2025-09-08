@@ -1,4 +1,5 @@
 import { ClerkProvider } from "@clerk/nextjs";
+import { UserProvider } from "@/contexts/UserContext";
 import "./globals.css";
 
 export const metadata = {
@@ -9,10 +10,11 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body>{children}</body>
-      </html>
+      <UserProvider>
+        <html lang="da">
+          <body>{children}</body>
+        </html>
+      </UserProvider>
     </ClerkProvider>
   );
 }
-
