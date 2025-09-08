@@ -11,11 +11,16 @@ const isPublicRoute = createRouteMatcher([
 export default clerkMiddleware(async (auth, req) => {
   if (isPublicRoute(req)) return;
 
-  (await auth()).protect(); // ✅ korrekt brug af await
+  const { userId } = await auth();
+
+  if (!userId) {
+    return Response.redirect("https://cdt-platform.vercel.app/sign-in");
+  }
 });
 
 export const config = {
   matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
 };
+
 
 
