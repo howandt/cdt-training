@@ -1,67 +1,39 @@
-'use client'
+'use client';
 
-import { useRouter } from 'next/navigation'
-import { roles } from '@/constants/roles'
-import { informationDepth } from '@/constants/informationDepth'
-import { useUser } from '@/contexts/UserContext'
-import { ChevronRight } from 'lucide-react'
+import { useRouter } from 'next/navigation';
+import { roles } from '@/constants/roles';
+import { informationDepth } from '@/constants/informationDepth';
+import { useUser } from '@/contexts/UserContext';
+import { ChevronRight } from 'lucide-react';
+import { UserProfile } from '@/types'; // ← tilføjet import
 
 export default function OnboardingPage() {
-  const router = useRouter()
-  const { user: profile, setUser: setProfile } = useUser()
-
-
-  const [step, setStep] = useState(0)
-  const [profile, setProfile] = useState<UserProfile>({
-    name: '',
-    role: '',
-    language: '',
-    informationDepth: '',
-    completed: false,
-    casesCompleted: 0,
-  })
-
-  const handleNext = () => {
-    if (step === 2) {
-      // Gør onboarding færdig og send videre til case-træning
-      setProfile((prev) => ({ ...prev, completed: true }))
-      router.push('/case-training')
-    } else {
-      setStep(step + 1)
-    }
-  }
+  const router = useRouter();
+  const { user: profile, setUser: setProfile } = useUser();
 
   const handleSelect = (field: keyof UserProfile, value: string) => {
     const updated = { ...profile, [field]: value };
 
-    // Automatisk sprog baseret på rolle
     if (field === 'role') {
       updated.language = {
         parent: 'everyday',
         teacher: 'professional',
         professional: 'everyday',
         specialist: 'clinical',
-      }[value] || 'everyday'
+      }[value] || 'everyday';
     }
 
-    setProfile(updated)
+    setProfile(updated);
   };
 
   return (
     <div className="min-h-screen bg-blue-50 flex items-center justify-center p-6">
       <div className="bg-white rounded-xl shadow-xl p-6 sm:p-10 w-full max-w-xl">
-        {step === 0 && (
-          <div>
-            <h2 className="text-2xl font-bold mb-4">Hvad skal jeg kalde dig?</h2>
-            <input
-              type="text"
-              value={profile.name}
-              onChange={(e) => handleSelect('name', e.target.value)}
-              placeholder="Skriv dit navn"
-              className="w-full p-4 border border-gray-300 rounded-lg"
-            />
-          </div>
-        )}
+        {/* resten af dit return-indhold */}
+      </div>
+    </div>
+  );
+}
 
         {step === 1 && (
           <div>
