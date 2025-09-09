@@ -1,15 +1,17 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { roles } from '@/constants/roles';
 import { informationDepth } from '@/constants/informationDepth';
-import { useUser } from '@/contexts/UserContext';
 import { ChevronRight } from 'lucide-react';
-import { UserProfile } from '@/types'; // ← tilføjet import
+import { useUser } from '@/contexts/UserContext';
+import { UserProfile } from '@/types';
 
 export default function OnboardingPage() {
   const router = useRouter();
   const { user: profile, setUser: setProfile } = useUser();
+  const [step, setStep] = useState(0);
 
   const handleSelect = (field: keyof UserProfile, value: string) => {
     const updated = { ...profile, [field]: value };
@@ -26,14 +28,30 @@ export default function OnboardingPage() {
     setProfile(updated);
   };
 
+  const handleNext = () => {
+    if (step === 2) {
+      setProfile({ ...profile, completed: true });
+      router.push('/case-training');
+    } else {
+      setStep(step + 1);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-blue-50 flex items-center justify-center p-6">
       <div className="bg-white rounded-xl shadow-xl p-6 sm:p-10 w-full max-w-xl">
-        {/* resten af dit return-indhold */}
-      </div>
-    </div>
-  );
-}
+        {step === 0 && (
+          <div>
+            <h2 className="text-2xl font-bold mb-4">Hvad skal jeg kalde dig?</h2>
+            <input
+              type="text"
+              value={profile.name}
+              onChange={(e) => handleSelect('name', e.target.value)}
+              placeholder="Skriv dit navn"
+              className="w-full p-4 border border-gray-300 rounded-lg"
+            />
+          </div>
+        )}
 
         {step === 1 && (
           <div>
@@ -79,18 +97,21 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* Næste-knap */}
         <div className="mt-6 text-right">
-  <button
-    onClick={handleNext}
-    disabled={
-      (step === 0 && !profile.name.trim()) ||
-      (step === 1 && !profile.role) ||
-      (step === 2 && !profile.informationDepth)
-    }
-    className="inline-flex items-center px-5 py-3 bg-blue-600 text-white rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-  >
-    Næste
-    <ChevronRight className="ml-2 w-5 h-5" />
-  </button>
-</div>
+          <button
+            onClick={handleNext}
+            disabled={
+              (step === 0 && !profile.name) ||
+              (step === 1 && !profile.role) ||
+              (step === 2 && !profile.informationDepth)
+            }
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+          >
+            {step === 2 ? 'Start træning' : 'Næste'}
+            <ChevronRight className="inline-block ml-2 w-4 h-4" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
