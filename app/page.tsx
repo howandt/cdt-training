@@ -6,11 +6,27 @@ import { roles } from '@/constants/roles';
 import { informationDepth } from '@/constants/informationDepth';
 import { ChevronRight } from 'lucide-react';
 import { useUser } from '@/contexts/UserContext';
+import { UserProfile } from '@/types';
 
 export default function OnboardingPage() {
   const router = useRouter();
   const { user: profile, setUser: setProfile } = useUser();
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(0);
+
+  const handleSelect = (field: keyof UserProfile, value: string) => {
+    const updated = { ...profile, [field]: value };
+
+    if (field === 'role') {
+      updated.language = {
+        parent: 'everyday',
+        teacher: 'professional',
+        professional: 'everyday',
+        specialist: 'clinical',
+      }[value] || 'everyday';
+    }
+
+    setProfile(updated);
+  };
 
   const handleNext = () => {
     if (step === 2) {
@@ -22,29 +38,6 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="p-6">
-      <h1 className="text-xl font-bold">Onboarding</h1>
-      {/* Resten af dit UI her */}
-    </div>
-  );
-}
-
-  const handleSelect = (field: keyof typeof user, value: string) => {
-    const updated = { ...user, [field]: value };
-
-    if (field === 'role') {
-      updated.language = {
-        parent: 'everyday',
-        teacher: 'professional',
-        professional: 'everyday',
-        specialist: 'clinical',
-      }[value] || 'everyday';
-    }
-
-    setUser(updated);
-  };
-
-  return (
     <div className="min-h-screen bg-blue-50 flex items-center justify-center p-6">
       <div className="bg-white rounded-xl shadow-xl p-6 sm:p-10 w-full max-w-xl">
         {step === 0 && (
@@ -52,7 +45,7 @@ export default function OnboardingPage() {
             <h2 className="text-2xl font-bold mb-4">Hvad skal jeg kalde dig?</h2>
             <input
               type="text"
-              value={user.name}
+              value={profile.name}
               onChange={(e) => handleSelect('name', e.target.value)}
               placeholder="Skriv dit navn"
               className="w-full p-4 border border-gray-300 rounded-lg"
@@ -69,7 +62,7 @@ export default function OnboardingPage() {
                   key={role.value}
                   onClick={() => handleSelect('role', role.value)}
                   className={`w-full text-left p-4 border rounded-lg ${
-                    user.role === role.value
+                    profile.role === role.value
                       ? 'border-blue-500 bg-blue-50'
                       : 'border-gray-300'
                   }`}
@@ -91,7 +84,7 @@ export default function OnboardingPage() {
                   key={option.value}
                   onClick={() => handleSelect('informationDepth', option.value)}
                   className={`w-full text-left p-4 border rounded-lg ${
-                    user.informationDepth === option.value
+                    profile.informationDepth === option.value
                       ? 'border-blue-500 bg-blue-50'
                       : 'border-gray-300'
                   }`}
@@ -108,9 +101,9 @@ export default function OnboardingPage() {
           <button
             onClick={handleNext}
             disabled={
-              (step === 0 && !user.name) ||
-              (step === 1 && !user.role) ||
-              (step === 2 && !user.informationDepth)
+              (step === 0 && !profile.name) ||
+              (step === 1 && !profile.role) ||
+              (step === 2 && !profile.informationDepth)
             }
             className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
           >
@@ -122,3 +115,4 @@ export default function OnboardingPage() {
     </div>
   );
 }
+
