@@ -11,7 +11,10 @@ import { UserProfile } from '@/types';
 export default function OnboardingPage() {
   const router = useRouter();
   const { user: profile, setUser: setProfile } = useUser();
-  const [step, setStep] = useState(0);
+  console.log('🔍 Profil-data:', profile);
+  const [step, setStep] = useState(() => {
+  return !profile.name ? 0 : !profile.role ? 1 : !profile.informationDepth ? 2 : 0;
+});
 
   const handleSelect = (field: keyof UserProfile, value: string) => {
     const updated = { ...profile, [field]: value };
@@ -97,21 +100,27 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        <div className="mt-6 text-right">
-          <button
-            onClick={handleNext}
-            disabled={
-              (step === 0 && !profile.name) ||
-              (step === 1 && !profile.role) ||
-              (step === 2 && !profile.informationDepth)
-            }
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
-          >
-            {step === 2 ? 'Start træning' : 'Næste'}
-            <ChevronRight className="inline-block ml-2 w-4 h-4" />
-          </button>
-        </div>
-      </div>
-    </div>
+        <div className="mt-6">
+  <div className="text-sm text-gray-500 text-left mb-4">
+    <p><strong>Navn:</strong> {profile.name}</p>
+    <p><strong>Rolle:</strong> {profile.role}</p>
+    <p><strong>Info:</strong> {profile.informationDepth}</p>
+  </div>
+
+  <div className="text-right">
+    <button
+      onClick={handleNext}
+      disabled={
+        (step === 0 && !profile.name) ||
+        (step === 1 && !profile.role) ||
+        (step === 2 && !profile.informationDepth)
+      }
+      className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+    >
+      {step === 2 ? 'Start træning' : 'Næste'}
+      <ChevronRight className="inline-block ml-2 w-4 h-4" />
+    </button>
+  </div>
+</div>
   );
 }
