@@ -9,18 +9,25 @@ import { useUser } from '@/contexts/UserContext';
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const [step, setStep] = useState(0);
-
-  const { user, setUser } = useUser();
+  const { user: profile, setUser: setProfile } = useUser();
+  const [step, setStep] = useState(1);
 
   const handleNext = () => {
     if (step === 2) {
-      setUser({ ...user, completed: true });
+      setProfile({ ...profile, completed: true });
       router.push('/case-training');
     } else {
       setStep(step + 1);
     }
   };
+
+  return (
+    <div className="p-6">
+      <h1 className="text-xl font-bold">Onboarding</h1>
+      {/* Resten af dit UI her */}
+    </div>
+  );
+}
 
   const handleSelect = (field: keyof typeof user, value: string) => {
     const updated = { ...user, [field]: value };
