@@ -32,7 +32,7 @@ export default function OnboardingPage() {
   }
 
   const handleSelect = (field: keyof UserProfile, value: string) => {
-    const updated = { ...profile, [field]: value }
+    const updated = { ...profile, [field]: value };
 
     // Automatisk sprog baseret på rolle
     if (field === 'role') {
