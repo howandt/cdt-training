@@ -31,11 +31,11 @@ export default function CasePage() {
       ) : (
         <div className="mt-6 space-y-4">
           <textarea
-            value={reflection}
-            onChange={(e) => setReflection(e.target.value)}
-            placeholder="Skriv dine refleksioner her..."
-            className="w-full p-4 border border-gray-300 rounded-lg min-h-[120px]"
-          />
+  value={reflection}
+  onChange={(e) => setReflection(e.target.value)}
+  placeholder="Skriv dine refleksioner her..."
+  className="w-full p-4 border border-gray-300 rounded-lg min-h-[120px] text-gray-900 placeholder-gray-400"
+/>
 
           <div className="flex justify-end gap-2">
             <button
