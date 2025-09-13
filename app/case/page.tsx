@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useUser as useClerkUser } from '@clerk/nextjs';
 
 export default function CasePage() {
   const [showReflection, setShowReflection] = useState(false);
   const [reflection, setReflection] = useState('');
-  const supabase = useSupabaseClient();
+
+  const supabase = createClientComponentClient();
   const { user } = useClerkUser();
 
   return (
@@ -31,11 +32,11 @@ export default function CasePage() {
       ) : (
         <div className="mt-6 space-y-4">
           <textarea
-  value={reflection}
-  onChange={(e) => setReflection(e.target.value)}
-  placeholder="Skriv dine refleksioner her..."
-  className="w-full p-4 border border-gray-300 rounded-lg min-h-[120px] text-gray-900 placeholder-gray-400"
-/>
+            value={reflection}
+            onChange={(e) => setReflection(e.target.value)}
+            placeholder="Skriv dine refleksioner her..."
+            className="w-full p-4 border border-gray-300 rounded-lg min-h-[120px] text-gray-900 placeholder-gray-400"
+          />
 
           <div className="flex justify-end gap-2">
             <button
@@ -50,20 +51,20 @@ export default function CasePage() {
 
             <button
               onClick={async () => {
-  console.log("🧪 Gemmer refleksion", {
-    userId: user?.id,
-    content: reflection,
-  });
+                console.log("🧪 Gemmer refleksion", {
+                  userId: user?.id,
+                  content: reflection,
+                });
 
-  await saveReflection({
-    supabase,
-    userId: user?.id,
-    caseId: 'case-001',
-    content: reflection,
-  });
+                await saveReflection({
+                  supabase,
+                  userId: user?.id,
+                  caseId: 'case-001',
+                  content: reflection,
+                });
 
-  setShowReflection(false);
-}}
+                setShowReflection(false);
+              }}
               disabled={reflection.trim().length === 0}
               className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg disabled:opacity-50"
             >
