@@ -1,10 +1,13 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 
 export default function CasePage() {
   const searchParams = useSearchParams();
   const name = searchParams.get('name');
+  const [showReflection, setShowReflection] = useState(false);
+  const [reflection, setReflection] = useState('');
 
   return (
     <div className="min-h-screen bg-orange-50 flex items-center justify-center p-6">
@@ -39,11 +42,48 @@ export default function CasePage() {
           </ul>
         </div>
 
-        <div className="text-right">
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl text-sm">
-            ➕ Start refleksion
-          </button>
-        </div>
+        {!showReflection ? (
+          <div className="text-right">
+            <button
+              onClick={() => setShowReflection(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl text-sm"
+            >
+              ➕ Start refleksion
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <textarea
+              value={reflection}
+              onChange={(e) => setReflection(e.target.value)}
+              placeholder="Skriv dine refleksioner her..."
+              className="w-full p-4 border border-gray-300 rounded-lg min-h-[120px]"
+            />
+
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => {
+                  setReflection('');
+                  setShowReflection(false);
+                }}
+                className="text-gray-600 hover:underline"
+              >
+                Annuller
+              </button>
+
+              <button
+                onClick={() => {
+                  alert("Refleksion gemt (midlertidigt)");
+                  setShowReflection(false);
+                }}
+                disabled={reflection.trim().length === 0}
+                className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg disabled:opacity-50"
+              >
+                Gem refleksion
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
