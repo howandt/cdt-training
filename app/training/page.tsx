@@ -47,10 +47,17 @@ export default function TrainingPage() {
           </Link>
 
           <Link
-            href={`/matrix?name=${encodeURIComponent(name || '')}`}
+            href={`/comorbidity?name=${encodeURIComponent(name || '')}`}
             className="bg-pink-500 hover:bg-pink-600 p-5 rounded-2xl transition-colors flex items-center justify-center"
           >
-            🧬 Matrix
+            🧬 Komorbiditet
+          </Link>
+
+          <Link
+            href={`/diagnosis?name=${encodeURIComponent(name || '')}`}
+            className="bg-gray-700 hover:bg-gray-800 p-5 rounded-2xl transition-colors flex items-center justify-center"
+          >
+            📖 Diagnoser
           </Link>
         </div>
       </div>
