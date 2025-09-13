@@ -12,7 +12,8 @@ const isPublicRoute = createRouteMatcher([
   "/roleplay(.*)",
   "/quiz(.*)",
   "/template(.*)",
-  "/matrix(.*)",
+  "/comorbidity(.*)",  // 👈 denne
+  "/diagnosis(.*)",    // 👈 og denne
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
