@@ -2,12 +2,17 @@
 import { createRouteMatcher } from "@clerk/nextjs/server";
 import { clerkMiddleware } from "@clerk/nextjs/server";
 
+// 👇 Disse routes kræver ikke login
 const isPublicRoute = createRouteMatcher([
   "/",
   "/sign-in(.*)",
   "/sign-up(.*)",
   "/training(.*)",
-  "/case(.*)", // 👈 tilføj denne linje
+  "/case(.*)",
+  "/roleplay(.*)",
+  "/quiz(.*)",
+  "/template(.*)",
+  "/matrix(.*)",
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
@@ -23,6 +28,7 @@ export default clerkMiddleware(async (auth, req) => {
 export const config = {
   matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
 };
+
 
 
 
