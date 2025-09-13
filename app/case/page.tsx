@@ -14,7 +14,7 @@ export default function CasePage() {
     <div className="max-w-3xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-4">Case: Louise</h1>
 
-      <p className="mb-6 text-gray-800">
+      <p className="mb-6 text-gray-600">
         Louise er 9 år og har netop fået diagnosen autisme. Hun er begyndt i en almenklasse med støtte,
         men oplever udfordringer i overgangen mellem timer og frikvarter. Du er lærer i klassen.
       </p>
