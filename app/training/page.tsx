@@ -1,6 +1,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 export default function TrainingPage() {
   const searchParams = useSearchParams();
@@ -15,7 +16,7 @@ export default function TrainingPage() {
         <p className="text-lg text-gray-700">Hvordan vil du gerne træne i dag?</p>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-white font-semibold">
-          <Link
+      <Link
     href={`/case?name=${encodeURIComponent(name || '')}`}
     className="bg-blue-500 hover:bg-blue-600 p-5 rounded-2xl transition-colors text-white font-semibold flex items-center justify-center"
   >
