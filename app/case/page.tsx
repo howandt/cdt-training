@@ -50,14 +50,20 @@ export default function CasePage() {
 
             <button
               onClick={async () => {
-                await saveReflection({
-                  supabase,
-                  userId: user?.id,
-                  caseId: 'case-001',
-                  content: reflection,
-                });
-                setShowReflection(false);
-              }}
+  console.log("🧪 Gemmer refleksion", {
+    userId: user?.id,
+    content: reflection,
+  });
+
+  await saveReflection({
+    supabase,
+    userId: user?.id,
+    caseId: 'case-001',
+    content: reflection,
+  });
+
+  setShowReflection(false);
+}}
               disabled={reflection.trim().length === 0}
               className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg disabled:opacity-50"
             >
@@ -82,6 +88,12 @@ async function saveReflection({
   caseId: string;
   content: string;
 }) {
+  console.log("📤 Sender til Supabase:", {
+    userId,
+    caseId,
+    content,
+  });
+
   const { error } = await supabase.from('reflections').insert([
     {
       user_id: userId,
@@ -91,9 +103,9 @@ async function saveReflection({
   ]);
 
   if (error) {
-    console.error('Kunne ikke gemme refleksion:', error.message);
-    alert('Noget gik galt – prøv igen.');
+    console.error("❌ Supabase-fejl:", error.message);
+    alert("Noget gik galt – prøv igen.");
   } else {
-    alert('Refleksion gemt ✅');
+    alert("Refleksion gemt ✅");
   }
 }
