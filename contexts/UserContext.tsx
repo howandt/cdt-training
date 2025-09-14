@@ -21,19 +21,27 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserInfo>(defaultUser);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const name = params.get("name") || localStorage.getItem("cdt_user") || "Test";
-    const type = (params.get("type") as "test" | "basic" | "pro") || "test";
+  const params = new URLSearchParams(window.location.search);
 
-    localStorage.setItem("cdt_user", name);
-    localStorage.setItem("cdt_user_type", type);
+  const name =
+    params.get("name") ||
+    localStorage.getItem("cdt_user") ||
+    "Gæst"; // ⬅️ Opdateret: fallback navn
 
-    setUser({
-      name,
-      type,
-      canSave: type === "basic" || type === "pro",
-    });
-  }, []);
+  const type =
+    (params.get("type") as "test" | "basic" | "pro") ||
+    localStorage.getItem("cdt_user_type") ||
+    "test"; // ⬅️ Opdateret: fallback type
+
+  localStorage.setItem("cdt_user", name);
+  localStorage.setItem("cdt_user_type", type);
+
+  setUser({
+    name,
+    type,
+    canSave: type === "basic" || type === "pro",
+  });
+}, []);
 
   return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
 }

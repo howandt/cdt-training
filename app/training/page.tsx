@@ -12,6 +12,7 @@ export default function TrainingPage() {
   const name = searchParams.get('name');
   const router = useRouter();
   const user = useUser();
+  console.log("USER:", user);
 
   // ⏱ Redirect efter 30 min for test-brugere
   useEffect(() => {
