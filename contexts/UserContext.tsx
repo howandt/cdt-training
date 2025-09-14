@@ -26,12 +26,17 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const name =
     params.get("name") ||
     localStorage.getItem("cdt_user") ||
-    "Gæst"; // ⬅️ Opdateret: fallback navn
+    "Gæst";
 
-  const type =
-    (params.get("type") as "test" | "basic" | "pro") ||
+  const rawType =
+    params.get("type") ||
     localStorage.getItem("cdt_user_type") ||
-    "test"; // ⬅️ Opdateret: fallback type
+    "test";
+
+  const validTypes = ["test", "basic", "pro"] as const;
+  const type = validTypes.includes(rawType as any)
+    ? (rawType as "test" | "basic" | "pro")
+    : "test";
 
   localStorage.setItem("cdt_user", name);
   localStorage.setItem("cdt_user_type", type);
