@@ -33,16 +33,14 @@ export default function TrainingPage() {
   }, [user, router]);
 
   function handleTrainingClick(path: string) {
-    if (user.type === "test") {
-      const existing = localStorage.getItem("cdt_test_endtime");
-      if (!existing) {
-        const end = Date.now() + 30 * 60 * 1000;
-        localStorage.setItem("cdt_test_endtime", end.toString());
-      }
-    }
-
-    router.push(path);
+  const existing = localStorage.getItem("cdt_test_endtime");
+  if (!existing) {
+    const end = Date.now() + 30 * 60 * 1000;
+    localStorage.setItem("cdt_test_endtime", end.toString());
   }
+
+  router.push(path);
+}
 
   return (
     <div className="min-h-screen bg-blue-50 flex flex-col items-center justify-center p-6">
