@@ -1,43 +1,44 @@
-'use client'
+"use client";
 
-import { createContext, useContext, useState, ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState } from "react";
 
-export type UserProfile = {
-  name: string
-  role: string
-  language: string
-  informationDepth: string
-  completed: boolean
-  casesCompleted: number
+// Typen for brugerinfo
+export type UserInfo = {
+  name: string;
+  type: "test" | "basic" | "pro";
+  canSave: boolean;
+};
+
+const defaultUser: UserInfo = {
+  name: "Test",
+  type: "test",
+  canSave: false,
+};
+
+const UserContext = createContext<UserInfo>(defaultUser);
+
+export function UserProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<UserInfo>(defaultUser);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const name = params.get("name") || localStorage.getItem("cdt_user") || "Test";
+    const type = (params.get("type") as "test" | "basic" | "pro") || "test";
+
+    localStorage.setItem("cdt_user", name);
+    localStorage.setItem("cdt_user_type", type);
+
+    setUser({
+      name,
+      type,
+      canSave: type === "basic" || type === "pro",
+    });
+  }, []);
+
+  return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
 }
 
-type UserContextType = {
-  user: UserProfile
-  setUser: (user: UserProfile) => void
-}
-
-const defaultUser: UserProfile = {
-  name: '',
-  role: '',
-  language: '',
-  informationDepth: '',
-  completed: false,
-  casesCompleted: 0,
-}
-
-const UserContext = createContext<UserContextType>({
-  user: defaultUser,
-  setUser: () => {},
-})
-
-export const useUser = () => useContext(UserContext)
-
-export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<UserProfile>(defaultUser)
-
-  return (
-    <UserContext.Provider value={{ user, setUser }}>
-      {children}
-    </UserContext.Provider>
-  )
+// Hook til brug i komponenter
+export function useUser() {
+  return useContext(UserContext);
 }
