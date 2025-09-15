@@ -1,9 +1,6 @@
-// app/training/landing/page.tsx
+import { Button } from "../../../components/ui/button";
 
-import React from "react";
-import { Button } from "../../../components/ui/button"; // ← Ændret denne linje
-
-export default function LandingPage() {
+export default function TrainingLandingPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <section className="px-6 py-16 text-center">
@@ -20,31 +17,6 @@ export default function LandingPage() {
           <Button variant="outline" size="lg">
             Se cases
           </Button>
-        </div>
-      </section>
-
-      <section className="px-6 py-20 bg-muted">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-semibold mb-4">Hvad tilbyder vi?</h2>
-          <p className="text-muted-foreground text-lg">
-            Træn med cases, quizzer, teori og rollespil. Heidi guider dig trin for trin.
-          </p>
-        </div>
-      </section>
-
-      <section className="px-6 py-20">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl font-semibold mb-4">For hvem?</h2>
-          <p className="text-muted-foreground text-lg">
-            Uanset om du er lærer, forælder, pædagog eller specialist – Heidi tilpasser sig dig.
-          </p>
-        </div>
-      </section>
-
-      <section className="px-6 py-20 bg-muted">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-3xl font-semibold mb-6">Klar til at gå i gang?</h2>
-          <Button size="lg">Start her</Button>
         </div>
       </section>
     </main>
