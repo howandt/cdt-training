@@ -4,7 +4,7 @@
 
 import { useEffect, useState } from 'react';
 import { redirect, useRouter } from 'next/navigation';
-import { useUser } from '@/context/UserContext';
+import { useUser } from '@/contexts/UserContext';
 import { supabase } from '@/lib/supabaseClient';
 
 export default function TrainingPage() {
