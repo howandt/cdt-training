@@ -15,7 +15,7 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-    "@/*": ["app/*"]
+      "@/*": ["./app/*"]
     },
     "plugins": [{ "name": "next" }]
   },
@@ -27,4 +27,3 @@
   ],
   "exclude": ["node_modules"]
 }
-
