@@ -5,7 +5,6 @@ export default function OnboardingPage() {
       <p className="text-lg text-muted-foreground max-w-lg mb-8">
         Vi bruger din rolle og interesseområde til at tilpasse din oplevelse.
       </p>
-      {/* Navn, mail og rollevalg kommer her senere */}
     </main>
   );
 }
