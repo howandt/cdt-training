@@ -1,7 +1,7 @@
 // app/training/landing/page.tsx
 
 import React from "react";
-import { Button } from "../../components/ui/button"; // ← Ændret denne linje
+import { Button } from "../../../components/ui/button"; // ← Ændret denne linje
 
 export default function LandingPage() {
   return (
