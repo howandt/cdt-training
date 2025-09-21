@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { supabase } from '@/lib/supabaseClient';
 
 export default function CasePage() {
   const searchParams = useSearchParams();
@@ -17,25 +16,38 @@ export default function CasePage() {
     setIsSaving(true);
     
     try {
-      const { error } = await supabase
-        .from('reflections')
-        .insert({
+      // Gem lokalt som backup
+      localStorage.setItem('reflection_' + Date.now(), JSON.stringify({
+        user: name || 'anonym',
+        case: 'case-001',
+        content: reflection,
+        timestamp: new Date().toISOString()
+      }));
+
+      // Prøv Supabase uden import
+      const response = await fetch('/api/save-reflection', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           user_id: name || 'anonym',
           case_id: 'case-001',
           content: reflection,
-        });
+        }),
+      });
 
-      if (error) {
-        console.error('Supabase fejl:', error);
-        alert('Fejl: ' + error.message);
-      } else {
+      if (response.ok) {
         alert('Refleksion gemt i database!');
-        setReflection('');
-        setShowReflection(false);
+      } else {
+        alert('Gemt lokalt - database forbindelse fejlede');
       }
+      
+      setReflection('');
+      setShowReflection(false);
     } catch (error) {
       console.error('Fejl:', error);
-      alert('Der opstod en fejl');
+      alert('Gemt lokalt som backup');
     } finally {
       setIsSaving(false);
     }
