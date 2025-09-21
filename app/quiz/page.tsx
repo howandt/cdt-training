@@ -1,11 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { createClient } from '@supabase/supabase-js';
 import { CheckCircle2, XCircle, AlertCircle, ArrowRight } from 'lucide-react';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 interface Quiz {
   id: string;
@@ -129,11 +131,11 @@ export default function QuizPage() {
   if (quizzes.length === 0) {
     return (
       <div className="max-w-4xl mx-auto p-6">
-        <Card>
-          <CardContent className="text-center py-8">
+        <div className="bg-white rounded-lg shadow border">
+          <div className="text-center py-8">
             <p>Ingen quiz tilgængelige endnu.</p>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     );
   }
@@ -142,14 +144,14 @@ export default function QuizPage() {
   if (currentQuizIndex >= quizzes.length) {
     return (
       <div className="max-w-4xl mx-auto p-6">
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Quiz Gennemført! 🎉</CardTitle>
-            <CardDescription>
+        <div className="bg-white rounded-lg shadow border">
+          <div className="p-6 text-center border-b">
+            <h1 className="text-2xl font-bold">Quiz Gennemført! 🎉</h1>
+            <p className="text-gray-600 mt-2">
               Du scorede {score} ud af {quizzes.length} korrekte svar
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="text-center space-y-4">
+            </p>
+          </div>
+          <div className="p-6 text-center space-y-4">
             <div className="text-4xl font-bold text-blue-600">
               {Math.round((score / quizzes.length) * 100)}%
             </div>
@@ -164,11 +166,14 @@ export default function QuizPage() {
                 <p className="text-orange-600 font-medium">God indsats - øvelse gør mester! 💪</p>
               )}
             </div>
-            <Button onClick={handleRestartQuiz} className="mt-4">
+            <button 
+              onClick={handleRestartQuiz} 
+              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
               Prøv Igen
-            </Button>
-          </CardContent>
-        </Card>
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -178,9 +183,9 @@ export default function QuizPage() {
       <div className="mb-6">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold">Quiz</h1>
-          <Badge variant="outline">
+          <span className="px-3 py-1 text-sm border rounded-full">
             Spørgsmål {currentQuizIndex + 1} af {quizzes.length}
-          </Badge>
+          </span>
         </div>
         
         {/* Progress bar */}
@@ -192,13 +197,13 @@ export default function QuizPage() {
         </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg leading-relaxed">
+      <div className="bg-white rounded-lg shadow border">
+        <div className="p-6 border-b">
+          <h2 className="text-lg font-semibold leading-relaxed">
             {currentQuiz.question}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </h2>
+        </div>
+        <div className="p-6 space-y-4">
           {/* Answer options */}
           <div className="space-y-3">
             {currentQuiz.options.map((option, index) => (
@@ -243,14 +248,18 @@ export default function QuizPage() {
             
             <div className="space-x-2">
               {!showFeedback ? (
-                <Button 
+                <button 
                   onClick={handleSubmitAnswer}
                   disabled={selectedAnswer === null}
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
                 >
                   Bekræft Svar
-                </Button>
+                </button>
               ) : (
-                <Button onClick={handleNextQuiz}>
+                <button 
+                  onClick={handleNextQuiz}
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center"
+                >
                   {currentQuizIndex < quizzes.length - 1 ? (
                     <>
                       Næste Spørgsmål
@@ -259,12 +268,12 @@ export default function QuizPage() {
                   ) : (
                     'Se Resultat'
                   )}
-                </Button>
+                </button>
               )}
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }
