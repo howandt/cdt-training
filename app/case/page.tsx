@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 export default function CasePage() {
   const searchParams = useSearchParams();
   const name = searchParams.get('name');
+  const userId = searchParams.get('userId') || searchParams.get('id'); // Modtag ID fra platform
   const [showReflection, setShowReflection] = useState(false);
   const [reflection, setReflection] = useState('');
   const [isSaving, setIsSaving] = useState(false);
@@ -16,31 +17,33 @@ export default function CasePage() {
     setIsSaving(true);
     
     try {
-      // Gem lokalt som backup
       localStorage.setItem('reflection_' + Date.now(), JSON.stringify({
-        user: name || 'anonym',
+        user_id: userId || name || 'anonym',
+        display_name: name,
         case: 'case-001',
         content: reflection,
         timestamp: new Date().toISOString()
       }));
 
-      // Prøv Supabase uden import
       const response = await fetch('/api/save-reflection', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user_id: name || 'anonym',
+          user_id: userId || name || 'anonym',
           case_id: 'case-001',
           content: reflection,
+          display_name: name || 'Anonym'
         }),
       });
 
       if (response.ok) {
         alert('Refleksion gemt i database!');
       } else {
-        alert('Gemt lokalt - database forbindelse fejlede');
+        const error = await response.json();
+        console.error('Database fejl:', error);
+        alert('Gemt lokalt - database: ' + (error.error || 'ukendt fejl'));
       }
       
       setReflection('');
