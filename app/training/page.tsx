@@ -31,21 +31,21 @@ export default function TrainingPage() {
           {/* Dropdown menu */}
           <div className="absolute top-full left-0 w-full bg-white shadow-xl rounded-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10 mt-2">
             <button
-              onClick={() => navigateToCase('adhd-struktur')}
+              onClick={() => navigateToCase('5d3c41b8-728f-4cae-8a2e-a495f9552740')}
               className="w-full text-left p-4 hover:bg-blue-50 first:rounded-t-xl"
             >
               <div className="font-semibold text-blue-800">ADHD og Strukturændringer</div>
               <div className="text-sm text-gray-600">9-årig pige, klasseværelse</div>
             </button>
             <button
-              onClick={() => navigateToCase('autisme-social')}
+              onClick={() => navigateToCase('e0c88304-118c-433b-b3df-48e6307a816f')}
               className="w-full text-left p-4 hover:bg-blue-50 border-t border-gray-100"
             >
               <div className="font-semibold text-blue-800">Autisme og Sociale Udfordringer</div>
               <div className="text-sm text-gray-600">8-årig dreng, frikvarter</div>
             </button>
             <button
-              onClick={() => navigateToCase('aspergers-skjult')}
+              onClick={() => navigateToCase('c1fbd3a4-d135-4cfa-af8b-4bf9524bb185')}
               className="w-full text-left p-4 hover:bg-blue-50 border-t border-gray-100 last:rounded-b-xl"
             >
               <div className="font-semibold text-blue-800">Højfungerende Autisme - Masking</div>
