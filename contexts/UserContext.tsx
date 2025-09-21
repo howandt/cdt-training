@@ -1,57 +1,43 @@
-"use client";
+'use client'
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState, ReactNode } from 'react'
 
-// Typen for brugerinfo
-export type UserInfo = {
-  name: string;
-  type: "test" | "basic" | "pro";
-  canSave: boolean;
-};
-
-const defaultUser: UserInfo = {
-  name: "Test",
-  type: "test",
-  canSave: false,
-};
-
-const UserContext = createContext<UserInfo>(defaultUser);
-
-export function UserProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<UserInfo>(defaultUser);
-
-  useEffect(() => {
-  const params = new URLSearchParams(window.location.search);
-
-  const name =
-    params.get("name") ||
-    localStorage.getItem("cdt_user") ||
-    "Gæst";
-
-  const rawType =
-    params.get("type") ||
-    localStorage.getItem("cdt_user_type") ||
-    "test";
-
-  const validTypes = ["test", "basic", "pro"] as const;
-  const type = validTypes.includes(rawType as any)
-    ? (rawType as "test" | "basic" | "pro")
-    : "test";
-
-  localStorage.setItem("cdt_user", name);
-  localStorage.setItem("cdt_user_type", type);
-
-  setUser({
-    name,
-    type,
-    canSave: type === "basic" || type === "pro",
-  });
-}, []);
-
-  return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
+export type UserProfile = {
+  name: string
+  role: string
+  language: string
+  informationDepth: string
+  completed: boolean
+  casesCompleted: number
 }
 
-// Hook til brug i komponenter
-export function useUser() {
-  return useContext(UserContext);
+type UserContextType = {
+  user: UserProfile
+  setUser: (user: UserProfile) => void
+}
+
+const defaultUser: UserProfile = {
+  name: '',
+  role: '',
+  language: '',
+  informationDepth: '',
+  completed: false,
+  casesCompleted: 0,
+}
+
+const UserContext = createContext<UserContextType>({
+  user: defaultUser,
+  setUser: () => {},
+})
+
+export const useUser = () => useContext(UserContext)
+
+export const UserProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<UserProfile>(defaultUser)
+
+  return (
+    <UserContext.Provider value={{ user, setUser }}>
+      {children}
+    </UserContext.Provider>
+  )
 }
