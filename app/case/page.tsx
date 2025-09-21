@@ -1,13 +1,28 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+
+interface CaseData {
+  id: string;
+  title: string;
+  diagnosis: string;
+  age_group: string;
+  setting: string;
+  situation: string;
+  task_description: string;
+  difficulty_level: string;
+}
 
 export default function CasePage() {
   const searchParams = useSearchParams();
   const name = searchParams.get('name');
   const email = searchParams.get('email');
   const role = searchParams.get('role');
+  const caseId = searchParams.get('id') || 'adhd-struktur'; // Default case
+  
+  const [caseData, setCaseData] = useState<CaseData | null>(null);
+  const [loading, setLoading] = useState(true);
   const [showReflection, setShowReflection] = useState(false);
   const [reflection, setReflection] = useState('');
   const [heidiFeedback, setHeidiFeedback] = useState('');
@@ -15,8 +30,35 @@ export default function CasePage() {
   const [isSaving, setIsSaving] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  const generateHeidiFeedback = async (userReflection: string, userRole: string) => {
-    // Simuleret Heidi AI feedback baseret på rolle og svar
+  // Hent case-data fra database
+  useEffect(() => {
+    const fetchCase = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/cases?id=eq.${caseId}&select=*`,
+          {
+            headers: {
+              'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
+              'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+            }
+          }
+        );
+        
+        const data = await response.json();
+        if (data && data.length > 0) {
+          setCaseData(data[0]);
+        }
+      } catch (error) {
+        console.error('Fejl ved hentning af case:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCase();
+  }, [caseId]);
+
+  const generateHeidiFeedback = async (userReflection: string, userRole: string, diagnosis: string) => {
     const roleContext = {
       'forælder': 'Som forælder fokuserer du på hjemmemiljøet og samarbejde med skolen.',
       'lærer': 'Som lærer har du ansvar for hele klassens trivsel og læring.',
@@ -24,71 +66,81 @@ export default function CasePage() {
       'anden': 'Din unikke perspektiv bidrager værdifuldt til forståelsen.'
     };
 
+    const diagnosisInsights = {
+      'ADHD': 'Børn med ADHD har ofte udfordringer med eksekutive funktioner, impulskontrol og opmærksomhed.',
+      'Autisme': 'Børn med autisme har brug for forudsigelighed og kan have sensoriske følsomheder.',
+      'Aspergers': 'Børn med Aspergers/højfungerende autisme maskerer ofte deres udfordringer.'
+    };
+
     const context = roleContext[userRole as keyof typeof roleContext] || roleContext['anden'];
+    const diagnosisInfo = diagnosisInsights[diagnosis as keyof typeof diagnosisInsights] || '';
     
-    // Basis feedback struktur
     let feedback = `**Heidi's Evaluering for ${name}** (${userRole})\n\n`;
     feedback += `${context}\n\n`;
+    feedback += `**Diagnose-specifik viden:** ${diagnosisInfo}\n\n`;
     feedback += `**Hvad du gør godt:**\n`;
     
-    if (userReflection.toLowerCase().includes('rolig')) {
-      feedback += `• Fremragende fokus på at bevare roen - dette er fundamentalt når børn med ADHD er dysregulerede\n`;
+    // Dynamisk analyse baseret på refleksion og diagnose
+    if (userReflection.toLowerCase().includes('rolig') || userReflection.toLowerCase().includes('berolig')) {
+      feedback += `• Fremragende fokus på at bevare roen - fundamentalt for børn med ${diagnosis}\n`;
     }
     if (userReflection.toLowerCase().includes('struktur') || userReflection.toLowerCase().includes('rutine')) {
-      feedback += `• Du forstår vigtigheden af forudsigelighed og struktur for børn med ADHD\n`;
+      feedback += `• Du forstår vigtigheden af forudsigelighed for børn med ${diagnosis}\n`;
     }
     if (userReflection.toLowerCase().includes('forstå') || userReflection.toLowerCase().includes('behov')) {
       feedback += `• Stærk empati og forståelse for barnets underliggende behov\n`;
     }
     
-    feedback += `\n**Forbedringsmuligheder:**\n`;
-    feedback += `• Overvej konkrete redskaber som visuelle hjælpemidler eller "pause-kort"\n`;
-    feedback += `• Husk vigtigheden af at validere barnets følelser før du guide mod løsning\n`;
-    feedback += `• Tænk på hvordan du kan involvere barnet i at finde alternative strategier\n\n`;
+    feedback += `\n**Forbedringsmuligheder specifikt for ${diagnosis}:**\n`;
     
-    feedback += `**Specialpædagogisk perspektiv:**\n`;
-    feedback += `Børn med ADHD har ofte svært ved fleksibilitet og overgange. Din tilgang viser forståelse for neurodivergens. `;
-    feedback += `Næste gang kan du prøve "først-så" strategier eller give barnet to acceptable valgmuligheder.\n\n`;
+    if (diagnosis === 'ADHD') {
+      feedback += `• Overvej konkrete redskaber som timere, visuelle hjælpemidler eller "pause-kort"\n`;
+      feedback += `• Husk at give korte, tydelige instruktioner\n`;
+    } else if (diagnosis === 'Autisme') {
+      feedback += `• Tænk på sensoriske aspekter - lyde, lys, berøring\n`;
+      feedback += `• Brug konkret, bogstavelig kommunikation\n`;
+    } else if (diagnosis.includes('Aspergers')) {
+      feedback += `• Vær opmærksom på masking-adfærd og energiforbrug\n`;
+      feedback += `• Hjælp med at afkode sociale situationer eksplicit\n`;
+    }
     
-    feedback += `**Anbefaling til praksis:**\n`;
-    feedback += `Gem denne løsning! Du kan bruge lignende strategier i fremtidige situationer med pludselige ændringer.`;
+    feedback += `\n**Anbefaling til praksis:**\n`;
+    feedback += `Gem denne løsning! Du kan bruge lignende strategier i fremtidige situationer.`;
 
     return feedback;
   };
 
   const handleReflectionSubmit = async () => {
-    if (!reflection.trim()) return;
+    if (!reflection.trim() || !caseData) return;
     
     setIsAnalyzing(true);
     
-    // Generer Heidi feedback
-    const feedback = await generateHeidiFeedback(reflection, role || 'anden');
+    const feedback = await generateHeidiFeedback(reflection, role || 'anden', caseData.diagnosis);
     setHeidiFeedback(feedback);
     
     setTimeout(() => {
       setIsAnalyzing(false);
       setShowFeedback(true);
-    }, 2000); // Simuler AI analyse tid
+    }, 2000);
   };
 
   const saveReflectionAndFeedback = async () => {
     setIsSaving(true);
     
     try {
-      // Gem både reflektion og feedback
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/reflections`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+            'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
             'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
             'Prefer': 'return=minimal'
           },
           body: JSON.stringify({
             user_id: crypto.randomUUID(),
-            case_id: 'case-001-adhd',
+            case_id: caseId,
             content: reflection,
             display_name: name,
             user_email: email,
@@ -99,7 +151,7 @@ export default function CasePage() {
       );
 
       if (response.ok) {
-        alert('Løsning og feedback gemt! Du kan finde den i din profil.');
+        alert('Løsning og feedback gemt!');
       } else {
         alert('Gemt lokalt - kan synkroniseres senere');
       }
@@ -110,6 +162,27 @@ export default function CasePage() {
       setIsSaving(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Henter case...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!caseData) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600">Case ikke fundet</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
@@ -124,33 +197,24 @@ export default function CasePage() {
         {/* Case Presentation */}
         <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
           <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-xl mb-6">
-            <h2 className="text-2xl font-bold mb-4">📚 Case: ADHD og Strukturændringer</h2>
+            <h2 className="text-2xl font-bold mb-4">📚 {caseData.title}</h2>
             <div className="grid md:grid-cols-3 gap-4 text-sm">
-              <div><strong>Diagnose:</strong> ADHD</div>
-              <div><strong>Alder:</strong> 9 år (pige)</div>
-              <div><strong>Setting:</strong> Klasseværelse</div>
+              <div><strong>Diagnose:</strong> {caseData.diagnosis}</div>
+              <div><strong>Alder:</strong> {caseData.age_group}</div>
+              <div><strong>Setting:</strong> {caseData.setting}</div>
             </div>
           </div>
 
           <div className="prose prose-lg max-w-none">
             <h3 className="text-xl font-semibold text-gray-800 mb-4">Situationen:</h3>
             <p className="text-gray-700 leading-relaxed mb-6">
-              Det er mandag morgen, og du er ved at starte dagen med din klasse. 
-              Pludselig kommer skolelederen ind og fortæller at den planlagte idrætstime 
-              er aflyst på grund af sygdom, og at I i stedet skal have matematik. 
-              
-              Emma, en 9-årig pige med ADHD-diagnose, reagerer kraftigt på denne ændring. 
-              Hun begynder at tale højt, rejser sig fra sin plads, går rundt i lokalet 
-              og nægter at sætte sig ned igen. Hun siger: "Det er ikke fair! Vi skulle 
-              have idræt! Jeg kan ikke lave matematik nu!"
+              {caseData.situation}
             </p>
 
             <div className="bg-amber-50 border-l-4 border-amber-400 p-4 mb-6">
               <h4 className="font-semibold text-amber-800 mb-2">Din opgave:</h4>
               <p className="text-amber-700">
-                Læs casen grundigt og skriv en detaljeret løsning på hvordan du vil håndtere 
-                denne situation. Fokuser på praktiske strategier der tager højde for Emmas 
-                ADHD-diagnose og hendes behov for forudsigelighed.
+                {caseData.task_description}
               </p>
             </div>
           </div>
@@ -173,7 +237,7 @@ export default function CasePage() {
             <textarea
               value={reflection}
               onChange={(e) => setReflection(e.target.value)}
-              placeholder="Beskriv detaljeret hvordan du vil håndtere denne situation med Emma. Tænk på: Øjeblikkelige reaktioner, langsigtede strategier, kommunikation med Emma, hendes behov..."
+              placeholder={`Beskriv detaljeret hvordan du vil håndtere denne ${caseData.diagnosis}-situation...`}
               className="w-full h-40 p-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-gray-800 resize-none"
             />
             
@@ -209,7 +273,7 @@ export default function CasePage() {
               </div>
               <div>
                 <h3 className="text-2xl font-bold">Heidi's AI Evaluering</h3>
-                <p className="text-purple-100">Specialpædagogisk feedback baseret på din rolle</p>
+                <p className="text-purple-100">Specialpædagogisk feedback til {caseData.diagnosis}-casen</p>
               </div>
             </div>
             
