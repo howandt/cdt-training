@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { supabase } from '@/lib/supabaseClient';
 
 export default function CasePage() {
   const searchParams = useSearchParams();
@@ -16,29 +15,19 @@ export default function CasePage() {
     
     setIsSaving(true);
     
-    try {
-      const { error } = await supabase
-        .from('reflections')
-        .insert({
-          user_id: name || 'anonym',
-          case_id: 'case-001',
-          content: reflection,
-        });
-
-      if (error) {
-        console.error('Supabase fejl:', error);
-        alert('Kunne ikke gemme refleksion');
-      } else {
-        alert('Refleksion gemt!');
-        setReflection('');
-        setShowReflection(false);
-      }
-    } catch (error) {
-      console.error('Fejl:', error);
-      alert('Der opstod en fejl');
-    } finally {
-      setIsSaving(false);
-    }
+    // Simuler gem uden Supabase
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    console.log('Refleksion gemt:', {
+      user: name || 'anonym',
+      case: 'case-001',
+      content: reflection
+    });
+    
+    alert('Refleksion gemt lokalt!');
+    setReflection('');
+    setShowReflection(false);
+    setIsSaving(false);
   };
 
   return (
