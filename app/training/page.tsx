@@ -5,8 +5,9 @@ import { useRouter } from 'next/navigation';
 
 export default function TrainingPage() {
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const name = searchParams.get('name') || 'Bruger';
+const router = useRouter();
+const name = searchParams.get('name') || 'Bruger';
+const type = searchParams.get('type') || 'test';
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
