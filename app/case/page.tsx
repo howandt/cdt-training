@@ -13,33 +13,60 @@ export default function CasePage() {
   const [isSaving, setIsSaving] = useState(false);
 
   const saveReflection = async () => {
-    if (!reflection.trim()) return;
-    
-    console.log('Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
-    console.log('Supabase Key:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'Found' : 'Missing');
-    
-    setIsSaving(true);
-    
-    try {
-      localStorage.setItem('reflection_' + Date.now(), JSON.stringify({
-        user_id: name || 'anonym',
-        email: email,
-        role: role,
-        case: 'case-001',
-        content: reflection,
-        timestamp: new Date().toISOString()
-      }));
+  if (!reflection.trim()) return;
+  
+  setIsSaving(true);
+  
+  try {
+    // Gem lokalt som backup
+    localStorage.setItem('reflection_' + Date.now(), JSON.stringify({
+      user_id: name || 'anonym',
+      email: email,
+      role: role,
+      case: 'case-001',
+      content: reflection,
+      timestamp: new Date().toISOString()
+    }));
 
-      alert('Debug: Tjek browser console for miljøvariabler');
-      setReflection('');
-      setShowReflection(false);
-    } catch (error) {
-      console.error('Fejl:', error);
-      alert('Gemt lokalt som backup');
-    } finally {
-      setIsSaving(false);
+    // Prøv Supabase
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/reflections`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({
+          user_id: crypto.randomUUID(),
+          case_id: 'case-001',
+          content: reflection,
+          display_name: name,
+          user_email: email,
+          user_role: role
+        }),
+      }
+    );
+
+    if (response.ok) {
+      alert('Refleksion gemt i database!');
+    } else {
+      const errorText = await response.text();
+      console.error('Supabase fejl:', errorText);
+      alert('Gemt lokalt - database fejl: ' + errorText);
     }
-  };
+    
+    setReflection('');
+    setShowReflection(false);
+  } catch (error) {
+    console.error('Fejl:', error);
+    alert('Gemt lokalt som backup');
+  } finally {
+    setIsSaving(false);
+  }
+};
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
