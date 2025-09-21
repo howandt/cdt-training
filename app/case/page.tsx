@@ -14,49 +14,58 @@ export default function CasePage() {
   const [isSaving, setIsSaving] = useState(false);  
 
   const saveReflection = async () => {
-    if (!reflection.trim()) return;
-    
-    setIsSaving(true);
-    
-    try {
-      localStorage.setItem('reflection_' + Date.now(), JSON.stringify({
-        user_id: userId || name || 'anonym',
-        display_name: name,
-        case: 'case-001',
-        content: reflection,
-        timestamp: new Date().toISOString()
-      }));
+  if (!reflection.trim()) return;
+  
+  setIsSaving(true);
+  
+  try {
+    // Gem lokalt som backup
+    localStorage.setItem('reflection_' + Date.now(), JSON.stringify({
+      user_id: name || 'anonym',
+      email: email,
+      role: role,
+      case: 'case-001',
+      content: reflection,
+      timestamp: new Date().toISOString()
+    }));
 
-      const response = await fetch('/api/save-reflection', {
+    // Prøv Supabase via fetch til REST API
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/reflections`,
+      {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+          'Prefer': 'return=minimal'
         },
         body: JSON.stringify({
-          user_id: userId || name || 'anonym',
+          user_id: crypto.randomUUID(), // Generer UUID for Supabase
           case_id: 'case-001',
           content: reflection,
-          display_name: name || 'Anonym'
+          display_name: name,
+          user_email: email,
+          user_role: role
         }),
-      });
-
-      if (response.ok) {
-        alert('Refleksion gemt i database!');
-      } else {
-        const error = await response.json();
-        console.error('Database fejl:', error);
-        alert('Gemt lokalt - database: ' + (error.error || 'ukendt fejl'));
       }
-      
-      setReflection('');
-      setShowReflection(false);
-    } catch (error) {
-      console.error('Fejl:', error);
-      alert('Gemt lokalt som backup');
-    } finally {
-      setIsSaving(false);
+    );
+
+    if (response.ok) {
+      alert('Refleksion gemt i database!');
+    } else {
+      alert('Gemt lokalt - database utilgængelig');
     }
-  };
+    
+    setReflection('');
+    setShowReflection(false);
+  } catch (error) {
+    console.error('Fejl:', error);
+    alert('Gemt lokalt som backup');
+  } finally {
+    setIsSaving(false);
+  }
+};
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
