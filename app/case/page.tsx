@@ -6,10 +6,12 @@ import { useSearchParams } from 'next/navigation';
 export default function CasePage() {
   const searchParams = useSearchParams();
   const name = searchParams.get('name');
-  const userId = searchParams.get('userId') || searchParams.get('id'); // Modtag ID fra platform
+  const email = searchParams.get('email');
+  const role = searchParams.get('role');
+  const userId = searchParams.get('userId') || searchParams.get('id');
   const [showReflection, setShowReflection] = useState(false);
   const [reflection, setReflection] = useState('');
-  const [isSaving, setIsSaving] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);  
 
   const saveReflection = async () => {
     if (!reflection.trim()) return;

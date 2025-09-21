@@ -55,8 +55,8 @@ export default function TrainingPage() {
         </button>
         
         <button 
-          onClick={() => router.push('/diagnosis')}
-          className="p-6 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors"
+         onClick={() => router.push(`/case?name=${name}&email=${searchParams.get('email')}&role=${searchParams.get('role')}&type=${type}`)}
+         className="p-6 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
         >
           <h3 className="text-xl font-bold mb-2">Diagnoser</h3>
           <p className="text-sm opacity-90">Dybdegående viden</p>
