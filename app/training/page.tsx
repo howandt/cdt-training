@@ -5,9 +5,15 @@ import { useRouter } from 'next/navigation';
 
 export default function TrainingPage() {
   const searchParams = useSearchParams();
-const router = useRouter();
-const name = searchParams.get('name') || 'Bruger';
-const type = searchParams.get('type') || 'test';
+  const router = useRouter();
+  const name = searchParams.get('name') || 'Bruger';
+  const email = searchParams.get('email') || '';
+  const role = searchParams.get('role') || '';
+  const type = searchParams.get('type') || 'test';
+
+  const navigateToCase = (caseId: string) => {
+    router.push(`/case?id=${caseId}&name=${name}&email=${email}&role=${role}&type=${type}`);
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -15,13 +21,38 @@ const type = searchParams.get('type') || 'test';
       <p className="mb-8 text-gray-600">Vælg et træningsområde for at komme i gang:</p>
       
       <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-        <button 
-  onClick={() => router.push(`/case?name=${name}&email=${searchParams.get('email')}&role=${searchParams.get('role')}&type=${type}`)}
-  className="p-6 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
->
-  <h3 className="text-xl font-bold mb-2">Cases</h3>
-  <p className="text-sm opacity-90">Konkrete situationer med feedback</p>
-</button>
+        {/* Cases Dropdown */}
+        <div className="relative group">
+          <button className="w-full p-6 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors">
+            <h3 className="text-xl font-bold mb-2">Cases</h3>
+            <p className="text-sm opacity-90">Konkrete situationer med feedback</p>
+          </button>
+          
+          {/* Dropdown menu */}
+          <div className="absolute top-full left-0 w-full bg-white shadow-xl rounded-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10 mt-2">
+            <button
+              onClick={() => navigateToCase('adhd-struktur')}
+              className="w-full text-left p-4 hover:bg-blue-50 first:rounded-t-xl"
+            >
+              <div className="font-semibold text-blue-800">ADHD og Strukturændringer</div>
+              <div className="text-sm text-gray-600">9-årig pige, klasseværelse</div>
+            </button>
+            <button
+              onClick={() => navigateToCase('autisme-social')}
+              className="w-full text-left p-4 hover:bg-blue-50 border-t border-gray-100"
+            >
+              <div className="font-semibold text-blue-800">Autisme og Sociale Udfordringer</div>
+              <div className="text-sm text-gray-600">8-årig dreng, frikvarter</div>
+            </button>
+            <button
+              onClick={() => navigateToCase('aspergers-skjult')}
+              className="w-full text-left p-4 hover:bg-blue-50 border-t border-gray-100 last:rounded-b-xl"
+            >
+              <div className="font-semibold text-blue-800">Højfungerende Autisme - Masking</div>
+              <div className="text-sm text-gray-600">12-årig pige, efter skole</div>
+            </button>
+          </div>
+        </div>
         
         <button 
           onClick={() => router.push('/quiz')}
@@ -56,12 +87,12 @@ const type = searchParams.get('type') || 'test';
         </button>
         
         <button 
-  onClick={() => router.push('/diagnosis')}
-  className="p-6 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors"
->
-  <h3 className="text-xl font-bold mb-2">Diagnoser</h3>
-  <p className="text-sm opacity-90">Dybdegående viden</p>
-</button>
+          onClick={() => router.push('/diagnosis')}
+          className="p-6 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors"
+        >
+          <h3 className="text-xl font-bold mb-2">Diagnoser</h3>
+          <p className="text-sm opacity-90">Dybdegående viden</p>
+        </button>
       </div>
     </div>
   );
