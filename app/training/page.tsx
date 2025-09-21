@@ -1,40 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { redirect, useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useUser } from '@/contexts/UserContext';
 import { supabase } from '@/lib/supabaseClient';
 
 export default function TrainingPage() {
-  const router = useRouter();
-  const { user, loading } = useUser();
-  const [authorized, setAuthorized] = useState(false);
+  const { user } = useUser();
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (loading) return;
-
-    const validateAccess = async () => {
-      if (!user) {
-        router.replace('/platform?error=unauthenticated');
-        return;
-      }
-
-      const { data, error } = await supabase
-        .from('user_profiles')
-        .select('plan_type')
-        .eq('id', user.id)
-        .single();
-
-      if (error || !data || data.plan_type !== 'pro') {
-        router.replace('/platform?error=unauthorized');
-      } else {
-        setAuthorized(true);
-        router.replace('/training/landing');
-      }
-    };
-
-    validateAccess();
-  }, [user, loading, router]);
-
-  return null;
+  return (
+    <div className="max-w-3xl mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-4">Training Dashboard</h1>
+      <p className="mb-6 text-gray-600">
+        Velkommen til træningsområdet.
+      </p>
+    </div>
+  );
 }
