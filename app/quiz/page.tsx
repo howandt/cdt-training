@@ -40,7 +40,15 @@ export default function QuizPage() {
 
       if (error) throw error;
 
-      setQuizzes(data || []);
+      // Parse JSON fields
+      const processedData = data?.map(quiz => ({
+        ...quiz,
+        options: typeof quiz.options === 'string' ? JSON.parse(quiz.options) : quiz.options,
+        answer_key: typeof quiz.answer_key === 'string' ? JSON.parse(quiz.answer_key) : quiz.answer_key,
+        feedback: typeof quiz.feedback === 'string' ? JSON.parse(quiz.feedback) : quiz.feedback
+      })) || [];
+
+      setQuizzes(processedData);
     } catch (error) {
       console.error('Error fetching quizzes:', error);
     } finally {
@@ -115,6 +123,8 @@ export default function QuizPage() {
     if (index === currentQuiz.answer_key.correct) return 'Korrekt';
     
     const feedback = currentQuiz.feedback[index.toString()];
+    if (!feedback) return 'Ikke effektivt';
+    
     if (feedback.includes('Delvist')) return 'Delvist';
     if (feedback.includes('Problematisk') || feedback.includes('Ineffektivt')) return 'Problematisk';
     return 'Ikke effektivt';
@@ -224,7 +234,7 @@ export default function QuizPage() {
           </div>
 
           {/* Feedback section */}
-          {showFeedback && selectedAnswer !== null && (
+          {showFeedback && selectedAnswer !== null && currentQuiz.feedback[selectedAnswer.toString()] && (
             <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
               <div className="flex items-start space-x-2">
                 <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
