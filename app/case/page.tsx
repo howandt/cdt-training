@@ -2,10 +2,13 @@
 
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { supabase } from '@/lib/supabaseClient';
+import { useUser as useClerkUser } from '@clerk/nextjs';
 
 export default function CasePage() {
   const searchParams = useSearchParams();
   const name = searchParams.get('name');
+  const { user } = useClerkUser();
   const [showReflection, setShowReflection] = useState(false);
   const [reflection, setReflection] = useState('');
   const [isSaving, setIsSaving] = useState(false);
@@ -14,44 +17,26 @@ export default function CasePage() {
     setIsSaving(true);
     
     try {
-      const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const key = process.env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-      
-      if (!url || !key) {
-        alert('Supabase er ikke konfigureret korrekt');
-        setIsSaving(false);
-        return;
-      }
-      
-      const response = await fetch(
-        `${url}/rest/v1/reflections`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': key,
-            'Authorization': `Bearer ${key}`,
-            'Prefer': 'return=minimal'
-          },
-          body: JSON.stringify({
-            user_id: name || 'anonym',
+      const { error } = await supabase
+        .from('reflections')
+        .insert([
+          {
+            user_id: user?.id || name || 'anonym',
             case_id: 'case-001',
-            content: reflection
-          })
-        }
-      );
+            content: reflection,
+          },
+        ]);
 
-      if (response.ok) {
+      if (error) {
+        console.error('Supabase fejl:', error.message);
+        alert('Kunne ikke gemme. Prøv igen.');
+      } else {
         alert('Refleksion gemt! ✅');
         setReflection('');
         setShowReflection(false);
-      } else {
-        const errorText = await response.text();
-        console.error('Fejl:', response.status, errorText);
-        alert('Kunne ikke gemme. Prøv igen.');
       }
     } catch (error) {
-      console.error('Netværksfejl:', error);
+      console.error('Fejl ved gemning:', error);
       alert('Der opstod en fejl. Prøv igen.');
     } finally {
       setIsSaving(false);
